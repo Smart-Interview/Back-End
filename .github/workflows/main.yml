@@ -32,7 +32,21 @@ jobs:
           context: ./config-server
           dockerfile: Dockerfile
           push: false
-          tags: ilyaselmabrouki/config-server:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:latest
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Push to docker hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./config-server
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:latest
 
   build-and-push-discovery-service:
     name: Build Discovery Service Docker Image
@@ -61,4 +75,18 @@ jobs:
           context: ./discovery-server
           dockerfile: Dockerfile
           push: false
-          tags: ilyaselmabrouki/discovery-server:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Push to docker hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./config-server
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/discovery-server:latest
