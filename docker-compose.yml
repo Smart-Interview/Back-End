@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  config-server:
+    image: ilyaselmabrouki/config-server:latest
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - my-network
+
+  discovery-server:
+    image: ilyaselmabrouki/discovery-server:latest
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
