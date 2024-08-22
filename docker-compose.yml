@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   config-server:
-    image: config-service:latest
+    image: ilyaselmabrouki/config-server
     container_name: config-server
     ports:
       - "9999:9999"
@@ -13,7 +13,7 @@ services:
       - discovery-server
 
   discovery-server:
-    image: discovery-service:latest
+    image: ilyaselmabrouki/discovery-server
     container_name: discovery-server
     ports:
       - "8761:8761"
