@@ -1,20 +1,22 @@
 version: '3.8'
 services:
   config-server:
-    image: ilyaselmabrouki/config-server:latest
+    image: config-service:latest
     container_name: config-server
     ports:
-      - "8888:8888"
+      - "9999:9999"
     networks:
       - my-network
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
 
   discovery-server:
-    image: ilyaselmabrouki/discovery-server:latest
+    image: discovery-service:latest
     container_name: discovery-server
     ports:
       - "8761:8761"
-    depends_on:
-      - config-server
     networks:
       - my-network
 
