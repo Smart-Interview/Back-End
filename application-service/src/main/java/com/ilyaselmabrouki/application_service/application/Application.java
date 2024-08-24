@@ -1,6 +1,5 @@
-package com.ilyaselmabrouki.candidate_service.application;
+package com.ilyaselmabrouki.application_service.application;
 
-import com.ilyaselmabrouki.candidate_service.candidate.Candidate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +17,7 @@ import java.time.LocalDateTime;
 public class Application {
     @Id @GeneratedValue
     private Integer id;
-    @ManyToOne @JoinColumn(name = "candidate_id")
-    private Candidate candidate;
+    private Integer candidateId;
     private Integer offerId;
     private String cvPath;
     @Enumerated(EnumType.STRING)

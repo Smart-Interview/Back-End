@@ -1,4 +1,4 @@
-package com.ilyaselmabrouki.candidate_service.application;
+package com.ilyaselmabrouki.application_service.application;
 
 public enum ApplicationStatus {
     UNDER_REVIEW,
