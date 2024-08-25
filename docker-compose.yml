@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  postgresdb:
+    image: postgres:latest
+    container_name: candidate_ms
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=candidateDB
+    ports:
+      - '5432:5432'
+
   discovery-server:
     build: ./discovery-server
     container_name: discovery-server
@@ -7,12 +17,14 @@ services:
       - "8761:8761"
     expose:
       - '8761'
-    networks:
-      - smart-interview-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-      interval: 10s
-      retries: 4
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      - postgresdb
 
   config-server:
     build: ./config-server
@@ -21,8 +33,6 @@ services:
       - "9999:9999"
     expose:
       - '9999'
-    networks:
-      - smart-interview-network
     environment:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
     healthcheck:
@@ -38,14 +48,9 @@ services:
     container_name: candidate-service
     ports:
       - "8070:8070"
-    networks:
-      - smart-interview-network
     environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
       - CONFIG_SERVICE_URL=http://config-server:9999
     depends_on:
       config-server:
         condition: service_healthy
-
-networks:
-  smart-interview-network:
-    driver: bridge

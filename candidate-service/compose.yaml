@@ -1,18 +1,3 @@
 version: '3.8'
 
 services:
-  postgresdb:
-    image: postgres:latest
-    container_name: candidate_ms
-    environment:
-      - POSTGRES_PASSWORD=ilyas
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=candidateDB
-    ports:
-      - '5432:5432'
-    networks:
-      - smart-interview-network
-
-networks:
-  smart-interview-network:
-    driver: bridge
