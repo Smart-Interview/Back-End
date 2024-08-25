@@ -1,25 +1,56 @@
 version: '3.8'
 services:
-  config-server:
-    image: ilyaselmabrouki/config-server
-    container_name: config-server
-    ports:
-      - "9999:9999"
-    networks:
-      - my-network
+  postgresdb:
+    image: postgres:latest
+    container_name: candidate_ms
     environment:
-      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
-    depends_on:
-      - discovery-server
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=candidateDB
+    ports:
+      - '5432:5432'
 
   discovery-server:
-    image: ilyaselmabrouki/discovery-server
+    build: ./discovery-server
     container_name: discovery-server
     ports:
       - "8761:8761"
-    networks:
-      - my-network
+    expose:
+      - '8761'
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      - postgresdb
 
-networks:
-  my-network:
-    driver: bridge
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports:
+      - "9999:9999"
+    expose:
+      - '9999'
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
+      interval: 10s
+      retries: 4
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+
+  candidate-service:
+    build: ./candidate-service
+    container_name: candidate-service
+    ports:
+      - "8070:8070"
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+      - CONFIG_SERVICE_URL=http://config-server:9999
+    depends_on:
+      config-server:
+        condition: service_healthy
