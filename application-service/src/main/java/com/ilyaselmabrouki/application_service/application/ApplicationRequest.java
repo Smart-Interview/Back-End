@@ -8,11 +8,10 @@ import lombok.Data;
 public class ApplicationRequest {
     private Integer id;
     @NotNull(message = "Candidate should be present")
-    @NotEmpty(message = "Candidate should be present")
     private Integer candidateId;
     @NotNull(message = "Offer should be present")
-    @NotEmpty(message = "Offer should be present")
     private Integer offerId;
     @NotNull(message = "CV should be present")
     private String cvPath;
+    private ApplicationStatus status;
 }

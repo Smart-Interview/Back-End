@@ -38,12 +38,4 @@ public class ApplicationController {
         return ResponseEntity.ok(service.findApplicationsByCandidateId(candidateId));
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateApplication(
-            @RequestBody @Valid ApplicationRequest application
-    ){
-        service.updateApplication(application);
-        return ResponseEntity.accepted().build();
-    }
-
 }
