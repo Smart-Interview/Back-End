@@ -44,7 +44,7 @@ services:
         condition: service_healthy
 
   candidate-service:
-    build: ilyaselmabrouki/candidate-service
+    image: ilyaselmabrouki/candidate-service
     container_name: candidate-service
     ports:
       - "8070:8070"
