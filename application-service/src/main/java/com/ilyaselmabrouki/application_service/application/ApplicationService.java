@@ -1,6 +1,7 @@
 package com.ilyaselmabrouki.application_service.application;
 
 import com.ilyaselmabrouki.application_service.candidate.CandidateClient;
+import com.ilyaselmabrouki.application_service.exception.ApplicationNotFoundException;
 import com.ilyaselmabrouki.application_service.exception.CandidateNotFoundException;
 import com.ilyaselmabrouki.application_service.file.FileService;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,7 +48,7 @@ public class ApplicationService {
     public ApplicationResponse findApplication(Integer id) {
         return repository.findById(id)
                 .map(mapper::fromApplication)
-                .orElseThrow(()-> new EntityNotFoundException("No Application found"));
+                .orElseThrow(()-> new ApplicationNotFoundException("No Application found"));
     }
 
     public List<ApplicationResponse> findApplicationsByCandidateId(Integer candidateId) {

@@ -34,7 +34,7 @@ public class ApplicationController {
         return ResponseEntity.ok(service.findApplication(id));
     }
 
-    @GetMapping("/{candidateId}")
+    @GetMapping("/candidate/{candidateId}")
     public ResponseEntity<List<ApplicationResponse>> findApplicationsByCandidateId(
             @PathVariable Integer candidateId
     ){
