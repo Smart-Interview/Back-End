@@ -10,7 +10,6 @@ public class ApplicationMapper {
                 .id(request.getId())
                 .candidateId(request.getCandidateId())
                 .offerId(request.getOfferId())
-                .cvPath(request.getCvPath())
                 .status(ApplicationStatus.UNDER_REVIEW)
                 .build();
     }
@@ -20,7 +19,7 @@ public class ApplicationMapper {
                 application.getId(),
                 application.getCandidateId(),
                 application.getOfferId(),
-                application.getCvPath(),
+                application.getCv().getPath(),
                 application.getStatus()
         );
     }

@@ -2,9 +2,11 @@ package com.ilyaselmabrouki.application_service.application;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -14,10 +16,11 @@ public class ApplicationController {
 
     private final ApplicationService service;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Integer> createApplication(
-            @RequestBody @Valid ApplicationRequest request
-    ){
+            @ModelAttribute @Valid ApplicationRequest request
+    ) throws IOException {
         return ResponseEntity.ok(service.createApplication(request));
     }
 

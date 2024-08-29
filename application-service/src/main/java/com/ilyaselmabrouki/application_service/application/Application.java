@@ -1,5 +1,6 @@
 package com.ilyaselmabrouki.application_service.application;
 
+import com.ilyaselmabrouki.application_service.file.File;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,11 @@ public class Application {
     private Integer id;
     private Integer candidateId;
     private Integer offerId;
-    private String cvPath;
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+    @OneToOne
+    @JoinColumn(name = "cv_id", referencedColumnName = "id")
+    private File cv;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
