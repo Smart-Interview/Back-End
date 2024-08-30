@@ -48,7 +48,10 @@ public class TestService {
                 .orElseThrow(()-> new TestNotFoundException("No test found"));
     }
 
-    public List<QuestionResponse> getQuestions(QuestionRequest request) {
+    public List<QuestionResponse> getQuestions(Integer id) {
+        //  Fetch offer details from the Offer Service
+        Integer offerId = 1;
+        QuestionRequest request = new QuestionRequest(id, offerId);
         return questionClient.getQuestions(request);
     }
 }
