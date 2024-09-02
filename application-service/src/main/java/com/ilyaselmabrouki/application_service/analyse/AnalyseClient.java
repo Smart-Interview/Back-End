@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 )
 public interface AnalyseClient {
     @PostMapping(value = "/analyze-cv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    AnalyseResponse analyzeCv(@RequestPart("offerId") Integer applicationId,
+    AnalyseResponse analyzeCv(@RequestPart("applicationId") Integer applicationId,
                               @RequestPart("offerId") Integer offerId,
                               @RequestPart("cv") MultipartFile cv);
 }
