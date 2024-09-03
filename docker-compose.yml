@@ -1,5 +1,29 @@
 version: '3.8'
 services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: job_offer_db
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    image: sosouca/joboffers-server  # Use the Docker Hub image
+    container_name: job_offer_app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/job_offer_db
+      SPRING_DATASOURCE_USERNAME: your_username
+      SPRING_DATASOURCE_PASSWORD: your_password
+
   postgresdb:
     image: postgres:latest
     container_name: candidate_ms
@@ -54,3 +78,6 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+
+volumes:
+  postgres-data:
