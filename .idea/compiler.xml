@@ -11,6 +11,7 @@
         <module name="candidate-service" />
         <module name="application-service" />
         <module name="discovery-server" />
+        <module name="gateway-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -20,6 +21,7 @@
       <module name="candidate-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
       <module name="test-service" options="-parameters" />
     </option>
   </component>
