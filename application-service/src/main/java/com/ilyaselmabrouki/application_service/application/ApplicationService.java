@@ -26,7 +26,7 @@ public class ApplicationService {
     private final ApplicationMapper mapper;
     private final CandidateClient candidateClient;
     private final OfferClient offerClient;
-    private final AnalyseClient analyseClient;
+    //private final AnalyseClient analyseClient;
     private final FileService fileService;
 
     public Integer createApplication(ApplicationRequest request) throws IOException {
@@ -44,38 +44,38 @@ public class ApplicationService {
         var savedApplication = repository.save(application);
 
         // Trigger CV Analysis (asynchronously)
-        analyzeCvAsync(savedApplication);
+        //analyzeCvAsync(savedApplication);
 
         return savedApplication.getId();
     }
 
-    private void analyzeCvAsync(Application application) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Communicate with CV Analysis Service
-                AnalyseRequest analyseRequest = new AnalyseRequest(application.getOfferId(), application.getCv().getPath());
-                AnalyseResponse result = analyseClient.analyzeCv(analyseRequest);
-
-                // Update application status based on the analysis result
-                updateApplicationStatus(application.getId(), result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void updateApplicationStatus(Integer applicationId, AnalyseResponse result) {
-        Application application = repository.findById(applicationId)
-                .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
-
-        if (result.getStatus() == ApplicationStatus.ACCEPTED) {
-            application.setStatus(ApplicationStatus.ACCEPTED);
-        } else {
-            application.setStatus(ApplicationStatus.REFUSED);
-        }
-
-        repository.save(application);
-    }
+//    private void analyzeCvAsync(Application application) {
+//        CompletableFuture.runAsync(() -> {
+//            try {
+//                // Communicate with CV Analysis Service
+//                AnalyseRequest analyseRequest = new AnalyseRequest(application.getOfferId(), application.getCv().getPath());
+//                AnalyseResponse result = analyseClient.analyzeCv(analyseRequest);
+//
+//                // Update application status based on the analysis result
+//                updateApplicationStatus(application.getId(), result);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
+//
+//    private void updateApplicationStatus(Integer applicationId, AnalyseResponse result) {
+//        Application application = repository.findById(applicationId)
+//                .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
+//
+//        if (result.getStatus() == ApplicationStatus.ACCEPTED) {
+//            application.setStatus(ApplicationStatus.ACCEPTED);
+//        } else {
+//            application.setStatus(ApplicationStatus.REFUSED);
+//        }
+//
+//        repository.save(application);
+//    }
 
     public List<ApplicationResponse> getAllApplications() {
         return repository.findAll()
