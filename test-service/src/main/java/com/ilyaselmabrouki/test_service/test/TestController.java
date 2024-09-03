@@ -30,16 +30,15 @@ public class TestController {
         return ResponseEntity.ok(service.findTest(id));
     }
 
-    @GetMapping("{id}/questions")
-    public ResponseEntity<List<QuestionResponse>> getQuestions(@PathVariable Integer id){
-        return ResponseEntity.ok(service.getQuestions(id));
-    }
+//    @GetMapping("{id}/questions")
+//    public ResponseEntity<List<QuestionResponse>> getQuestions(@PathVariable Integer id){
+//        return ResponseEntity.ok(service.getQuestions(id));
+//    }
 
     //Find Tests by Offer
 
     //Find Tests by Candidate
 
     //Find Tests by application
-
 
 }

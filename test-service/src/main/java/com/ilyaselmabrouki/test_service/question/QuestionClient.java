@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(
-        name = "question-service",
-        url = "${application.config.question-url}"
-)
+//@FeignClient(
+//        name = "question-service",
+//        url = "${application.config.question-url}"
+//)
 public interface QuestionClient {
     @GetMapping
     List<QuestionResponse> getQuestions(@RequestBody QuestionRequest request);
