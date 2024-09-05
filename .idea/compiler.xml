@@ -6,27 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="test-service" />
         <module name="config-server" />
         <module name="candidate-service" />
-        <module name="application-service" />
         <module name="discovery-server" />
-        <module name="gateway" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="application-service" target="1.5" />
       <module name="gateway-service" target="17" />
+      <module name="test-service" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="application-service" options="-parameters" />
       <module name="candidate-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
-      <module name="gateway" options="-parameters" />
-      <module name="gateway-service" options="-parameters" />
-      <module name="test-service" options="-parameters" />
     </option>
   </component>
 </project>

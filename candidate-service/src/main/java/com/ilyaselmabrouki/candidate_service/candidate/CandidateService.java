@@ -2,7 +2,6 @@ package com.ilyaselmabrouki.candidate_service.candidate;
 
 import com.ilyaselmabrouki.candidate_service.exception.CandidateNotFoundException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,21 +21,21 @@ public class CandidateService {
     public void updateCandidate(CandidateRequest request) {
         var candidate = repository.findById(request.getId())
                 .orElseThrow(()-> new CandidateNotFoundException("Cannot found Candidate"));
-        mergerCandidate(candidate, request);
+        //mergerCandidate(candidate, request);
         repository.save(candidate);
     }
 
-    private void mergerCandidate(Candidate candidate, CandidateRequest request){
-        if (StringUtils.isNotBlank(request.getFirstName())){
-            candidate.setFirstName(request.getFirstName());
-        }
-        if (StringUtils.isNotBlank(request.getLastName())){
-            candidate.setLastName(request.getLastName());
-        }
-        if (StringUtils.isNotBlank(request.getEmail())){
-            candidate.setEmail(request.getEmail());
-        }
-    }
+//    private void mergerCandidate(Candidate candidate, CandidateRequest request){
+//        if (StringUtils.isNotBlank(request.getFirstName())){
+//            candidate.setFirstName(request.getFirstName());
+//        }
+//        if (StringUtils.isNotBlank(request.getLastName())){
+//            candidate.setLastName(request.getLastName());
+//        }
+//        if (StringUtils.isNotBlank(request.getEmail())){
+//            candidate.setEmail(request.getEmail());
+//        }
+//    }
 
     public List<CandidateResponse> getCandidates() {
         return repository.findAll()
