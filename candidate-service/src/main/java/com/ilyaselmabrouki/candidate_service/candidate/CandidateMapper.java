@@ -9,8 +9,7 @@ public class CandidateMapper {
         if (request == null) return null;
         return Candidate.builder()
                 .id(request.getId())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
+                .userName(request.getUserName())
                 .email(request.getEmail())
                 .build();
     }
@@ -18,8 +17,7 @@ public class CandidateMapper {
     public CandidateResponse fromCandidate(Candidate candidate){
         return new CandidateResponse(
                 candidate.getId(),
-                candidate.getFirstName(),
-                candidate.getLastName(),
+                candidate.getUserName(),
                 candidate.getEmail()
         );
     }

@@ -17,10 +17,8 @@ public class CandidateController {
     private final CandidateService service;
 
     @PostMapping
-    public ResponseEntity<Integer> createCandidate(
-            @RequestBody @Valid CandidateRequest candidate
-    ){
-        return ResponseEntity.ok(service.createCandidate(candidate));
+    public ResponseEntity<Integer> createCandidate(){
+        return ResponseEntity.ok(service.createCandidate());
     }
 
     @PutMapping
@@ -46,11 +44,6 @@ public class CandidateController {
     public ResponseEntity<Void> deleteCandidate(@PathVariable Integer id){
         service.deleteCandidate(id);
         return ResponseEntity.accepted().build();
-    }
-
-    @GetMapping("/session")
-    public Authentication authentication(Authentication authentication){
-        return authentication;
     }
 
 }
