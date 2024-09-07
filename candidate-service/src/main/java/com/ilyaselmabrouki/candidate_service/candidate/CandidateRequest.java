@@ -8,9 +8,7 @@ import lombok.Data;
 public class CandidateRequest {
     private Integer id;
     @NotNull(message = "Candidate first name is required")
-    private String firstName;
-    @NotNull(message = "Candidate last name is required")
-    private String lastName;
+    private String userName;
     @NotNull(message = "Candidate email is required")
     @Email(message = "Candidate email is not a valid email address")
     private String email;

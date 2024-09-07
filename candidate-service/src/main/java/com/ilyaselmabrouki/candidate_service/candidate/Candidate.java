@@ -13,7 +13,6 @@ import java.util.List;
 public class Candidate {
     @Id @GeneratedValue
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private String userName;
     private String email;
 }
