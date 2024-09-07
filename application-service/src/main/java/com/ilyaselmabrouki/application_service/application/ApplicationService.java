@@ -23,7 +23,7 @@ public class ApplicationService {
     private final ApplicationMapper mapper;
     private final CandidateClient candidateClient;
     private final OfferClient offerClient;
-    private final AnalyseClient analyseClient;
+    //private final AnalyseClient analyseClient;
     private final FileService fileService;
 
     public Integer createApplication(ApplicationRequest request) throws IOException {
