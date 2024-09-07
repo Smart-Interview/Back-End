@@ -13,6 +13,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="application-service" target="1.5" />
+      <module name="gateway" target="17" />
       <module name="gateway-service" target="17" />
       <module name="test-service" target="1.5" />
     </bytecodeTargetLevel>
