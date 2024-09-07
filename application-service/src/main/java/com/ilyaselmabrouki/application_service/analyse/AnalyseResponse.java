@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class AnalyseResponse {
-    private Integer id;
+    private Integer applicationId;
     private ApplicationStatus status;
 }
