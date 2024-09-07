@@ -1,12 +1,12 @@
-package com.ilyaselmabrouki.candidate_service.handler;
+package com.ilyaselmabrouki.application_service.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class ErrorResponse {
     private Map<String, String> errors;
 }

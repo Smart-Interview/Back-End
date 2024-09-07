@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgresdb:
+    image: postgres:latest
+    container_name: ApplicationDB
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=applicationDB
+    ports:
+      - '5433:5432'
