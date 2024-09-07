@@ -11,13 +11,11 @@
         <module name="candidate-service" />
         <module name="application-service" />
         <module name="discovery-server" />
+        <module name="gateway" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="test-service" target="17" />
-      <module name="application-service" target="1.5" />
       <module name="gateway-service" target="17" />
-      <module name="test-service" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -26,6 +24,7 @@
       <module name="candidate-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="gateway" options="-parameters" />
       <module name="test-service" options="-parameters" />
     </option>
   </component>
