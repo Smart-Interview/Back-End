@@ -3,9 +3,6 @@ package com.ilyaselmabrouki.candidate_service.candidate;
 import com.ilyaselmabrouki.candidate_service.exception.CandidateNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,16 +14,8 @@ public class CandidateService {
 
     public final CandidateMapper mapper;
     public final CandidateRepository repository;
-    public Integer createCandidate() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-
-        String username = jwt.getClaim("preferred_username");
-        String email = jwt.getClaim("email");
-
-        Candidate candidate = new Candidate();
-        candidate.setUserName(username);
-        candidate.setEmail(email);
+    public Integer createCandidate(CandidateRequest request) {
+        Candidate candidate = mapper.toCandidate(request);
         return repository.save(candidate).getId();
     }
 

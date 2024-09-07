@@ -18,17 +18,24 @@ import java.util.Arrays;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    private final JwtAuthConverter jwtAuthConverter;
+
+    public SecurityConfig(JwtAuthConverter jwtAuthConverter) {
+        this.jwtAuthConverter = jwtAuthConverter;
+    }
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
+        return http
             .cors(Customizer.withDefaults())
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(auth -> auth
-                    .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                    //.pathMatchers("/api/v1/candidates/**").hasAuthority("CANDIDATE")
+                    //.pathMatchers("/api/v1/offers/**").hasAuthority("RH")
                     .anyExchange().authenticated()
             )
-            .oauth2Login(Customizer.withDefaults())
-            .csrf(ServerHttpSecurity.CsrfSpec::disable);
-        return http.build();
+            .oauth2ResourceServer(ors-> ors.jwt(jwt-> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
+            .build();
     }
 
     @Bean
