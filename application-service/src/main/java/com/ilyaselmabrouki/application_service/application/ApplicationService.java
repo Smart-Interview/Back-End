@@ -1,17 +1,14 @@
 package com.ilyaselmabrouki.application_service.application;
 
 import com.ilyaselmabrouki.application_service.analyse.AnalyseClient;
-import com.ilyaselmabrouki.application_service.analyse.AnalyseRequest;
 import com.ilyaselmabrouki.application_service.analyse.AnalyseResponse;
 import com.ilyaselmabrouki.application_service.candidate.CandidateClient;
 import com.ilyaselmabrouki.application_service.exception.ApplicationNotFoundException;
-import com.ilyaselmabrouki.application_service.exception.CandidateNotFoundException;
 import com.ilyaselmabrouki.application_service.file.FileService;
 import com.ilyaselmabrouki.application_service.offer.OfferClient;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,46 +33,46 @@ public class ApplicationService {
         //Check Offer ID
         offerClient.findOfferById(request.getOfferId());
 
-        //Store File
+        //Save Application in DB
         Application application = mapper.toApplication(request);
+        var savedApplication = repository.save(application);
+
+        //Trigger CV Analysis (asynchronously)
+        analyzeCvAsync(savedApplication.getId(), request.getOfferId(), request.getCv());
+
+        //Store File
         application.setCv(fileService.uploadFile(request.getCv()));
 
         //Add application in DB
-        var savedApplication = repository.save(application);
-
-        // Trigger CV Analysis (asynchronously)
-        //analyzeCvAsync(savedApplication);
-
         return savedApplication.getId();
     }
 
-//    private void analyzeCvAsync(Application application) {
-//        CompletableFuture.runAsync(() -> {
-//            try {
-//                // Communicate with CV Analysis Service
-//                AnalyseRequest analyseRequest = new AnalyseRequest(application.getOfferId(), application.getCv().getPath());
-//                AnalyseResponse result = analyseClient.analyzeCv(analyseRequest);
-//
-//                // Update application status based on the analysis result
-//                updateApplicationStatus(application.getId(), result);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
-//
-//    private void updateApplicationStatus(Integer applicationId, AnalyseResponse result) {
-//        Application application = repository.findById(applicationId)
-//                .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
-//
-//        if (result.getStatus() == ApplicationStatus.ACCEPTED) {
-//            application.setStatus(ApplicationStatus.ACCEPTED);
-//        } else {
-//            application.setStatus(ApplicationStatus.REFUSED);
-//        }
-//
-//        repository.save(application);
-//    }
+    private void analyzeCvAsync(Integer applicationId, Integer offerId, MultipartFile cv) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                // Communicate with CV Analysis Service
+                AnalyseResponse result = analyseClient.analyzeCv(applicationId, offerId, cv);
+
+                // Update application status based on the analysis result
+                updateApplicationStatus(result.getApplicationId(), result.getStatus());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void updateApplicationStatus(Integer applicationId, ApplicationStatus status) {
+        Application application = repository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
+
+        if (status == ApplicationStatus.ACCEPTED) {
+            application.setStatus(ApplicationStatus.ACCEPTED);
+        } else {
+            application.setStatus(ApplicationStatus.REFUSED);
+        }
+
+        repository.save(application);
+    }
 
     public List<ApplicationResponse> getAllApplications() {
         return repository.findAll()
