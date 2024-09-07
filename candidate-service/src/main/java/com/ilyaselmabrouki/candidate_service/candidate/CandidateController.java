@@ -3,6 +3,8 @@ package com.ilyaselmabrouki.candidate_service.candidate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class CandidateController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('CANDIDATE')")
     public ResponseEntity<List<CandidateResponse>> getAllCandidates(){
         return ResponseEntity.ok(service.getCandidates());
     }
@@ -43,6 +46,11 @@ public class CandidateController {
     public ResponseEntity<Void> deleteCandidate(@PathVariable Integer id){
         service.deleteCandidate(id);
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/session")
+    public Authentication authentication(Authentication authentication){
+        return authentication;
     }
 
 }

@@ -14,6 +14,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="test-service" target="17" />
+      <module name="application-service" target="1.5" />
+      <module name="gateway-service" target="17" />
+      <module name="test-service" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
