@@ -26,7 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 @RestController
-@RequestMapping("/JobOffers")
+@RequestMapping("/api/v1/offers")
 public class JobOfferController {
 
 	private final  FileStorageService fileStorageService;
@@ -37,13 +37,14 @@ public class JobOfferController {
 		this.fileStorageService=fileStorageService;
 	}
 	
-	@GetMapping("/Offers")
+	@GetMapping
 	public ResponseEntity< List<JobOfferResponseDto> > getJobOffers(){
 		//return service.findAll();	
 		return new ResponseEntity<> (service.findAll(),HttpStatus.OK) ;
 	}
-	@PostMapping("/AddOffer")
-public ResponseEntity<JobOfferResponseDto> save(
+
+	@PostMapping
+	public ResponseEntity<JobOfferResponseDto> save(
         @RequestParam("pdfFile") MultipartFile file,
         @Valid @ModelAttribute JobOfferRequestDto request) {
     
@@ -61,19 +62,19 @@ public ResponseEntity<JobOfferResponseDto> save(
     return new ResponseEntity<>(dto, HttpStatus.CREATED);
 }
 	
-	@PutMapping("/Offers/update/{id}")
+	@PutMapping("/update/{id}")
     public ResponseEntity<JobOfferResponseDto> update(@Valid @RequestBody JobOfferRequestDto produitDto,@PathVariable Integer id) throws NotFoundException {
 		JobOfferResponseDto dto = service.update(produitDto, id);
         return ResponseEntity.accepted().body(dto);
     }
 	
-	@GetMapping("/Offers/id/{id}")
+	@GetMapping("/id/{id}")
 	public ResponseEntity<JobOfferResponseDto> findById(@PathVariable Integer id) {
 		JobOfferResponseDto dto = service.findById(id) ;
 		return ResponseEntity.ok(dto);
 	}
 	
-	@GetMapping("/Offers/title/{title}")
+	@GetMapping("/title/{title}")
 	public JobOfferResponseDto findByTitle(@PathVariable String title) {
 		return service.findByTitle(title);
 	}
@@ -84,13 +85,13 @@ public ResponseEntity<JobOfferResponseDto> save(
 		return service.findByRecruiter(id);
 	}
 	*/
-	@DeleteMapping("/Offers/id/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delet(@PathVariable Integer id) {
 		service.delete(id);
         return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/Offers/file/{id}")
+	@GetMapping("/file/{id}")
 public ResponseEntity<byte[]> getJobOfferFileById(@PathVariable Integer id) throws IOException {
     // Define the path to the PDF file based on the provided ID
     String filePath = "/app/jobOffersDescriptions/jobOffer_" + id + ".pdf";
