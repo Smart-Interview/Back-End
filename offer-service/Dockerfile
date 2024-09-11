@@ -1,11 +1,5 @@
 FROM openjdk:17-jdk-slim
+RUN apt-get update && apt-get install -y curl
 WORKDIR /app
-
-# Copy the jar file into the container
-COPY target/JobOfferManagement-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the port your application runs on
-EXPOSE 8080
-
-# Command to run the application
+COPY target/offer-service-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
