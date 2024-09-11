@@ -83,6 +83,29 @@ services:
       config-server:
         condition: service_healthy
 
+  web:
+    image: anassbe/flask_app-web
+    ports:
+      - "5000:5000"
+    environment:
+      - GENAI_API_KEY=${GENAI_API_KEY}
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=anass
+      - DB_NAME=job_matching
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: anass
+      MYSQL_DATABASE: job_matching
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
   keycloak:
     container_name: keycloak-ms
     image: quay.io/keycloak/keycloak:24.0.2
@@ -110,3 +133,4 @@ services:
 
 volumes:
   postgres-data:
+  db-data:
