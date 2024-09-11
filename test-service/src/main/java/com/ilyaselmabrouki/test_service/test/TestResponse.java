@@ -10,5 +10,5 @@ public class TestResponse {
     private Integer candidateId;
     private Integer offerId;
     private Integer applicationId;
-    private Double score;
+    private Integer score;
 }

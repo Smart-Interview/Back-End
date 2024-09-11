@@ -16,7 +16,7 @@ public class TestController {
     private final TestService service;
 
     @PostMapping
-    public ResponseEntity<Integer> createTest(@RequestBody @Valid TestRequest test){
+    public ResponseEntity<List<QuestionResponse>> createTest(@RequestBody @Valid TestRequest test){
         return ResponseEntity.ok(service.createTest(test));
     }
 
@@ -30,15 +30,8 @@ public class TestController {
         return ResponseEntity.ok(service.findTest(id));
     }
 
-//    @GetMapping("{id}/questions")
-//    public ResponseEntity<List<QuestionResponse>> getQuestions(@PathVariable Integer id){
-//        return ResponseEntity.ok(service.getQuestions(id));
-//    }
-
-    //Find Tests by Offer
-
-    //Find Tests by Candidate
-
-    //Find Tests by application
-
+    @PostMapping("{id}/result")
+    public ResponseEntity<ResultResponse> calculateResult(@PathVariable Integer id, @RequestBody @Valid List<ResultRequest> answers){
+        return ResponseEntity.ok(service.calculateResult(id,answers));
+    }
 }
