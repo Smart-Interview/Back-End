@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
         url = "${application.config.analyse-url}"
 )
 public interface AnalyseClient {
-    @PostMapping(value = "/analyze-cv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/analyze_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     AnalyseResponse analyzeCv(@RequestPart("applicationId") Integer applicationId,
                               @RequestPart("offerId") Integer offerId,
                               @RequestPart("cv") MultipartFile cv);
