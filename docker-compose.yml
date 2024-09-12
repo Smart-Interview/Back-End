@@ -1,48 +1,17 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_DB: job_offer_db_2
-      POSTGRES_USER: actual_username
-      POSTGRES_PASSWORD: actual_password
-    ports:
-      - "5431:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U actual_username"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  job-offer-management:
-    build: ./offer-service
-    container_name: job-offer-management
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/job_offer_db_2
-      SPRING_DATASOURCE_USERNAME: actual_username
-      SPRING_DATASOURCE_PASSWORD: actual_password
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - "8040:8080"
-
-  postgresdb:
+  offerdb:
     image: postgres:latest
-    container_name: candidate_ms
+    container_name: offer_db
     environment:
-      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=candidateDB
+      - POSTGRES_DB=offerDB
     ports:
-      - '5432:5432'
+      - '5431:5432'
 
   discovery-server:
-    build: ./discovery-server
+    image: ilyaselmabrouki/discovery-server:v1
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -55,10 +24,10 @@ services:
       retries: 5
       start_period: 40s
     depends_on:
-      - postgresdb
+      - offerdb
 
   config-server:
-    build: ./config-server
+    image: ilyaselmabrouki/config-server:v1
     container_name: config-server
     ports:
       - "9999:9999"
@@ -68,14 +37,47 @@ services:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
-      interval: 10s
-      retries: 4
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     depends_on:
       discovery-server:
         condition: service_healthy
 
+  offer-service:
+    image: ilyaselmabrouki/offer-service:v1
+    container_name: offer-service
+    ports:
+      - "8040:8040"
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+      - CONFIG_SERVICE_URL=http://config-server:9999
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8040/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  candidatedb:
+    image: postgres:latest
+    container_name: candidate_db
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=candidateDB
+    ports:
+      - '5432:5432'
+    depends_on:
+      offer-service:
+        condition: service_healthy
+
   candidate-service:
-    build: ./candidate-service
+    image: ilyaselmabrouki/candidate-service:v1
     container_name: candidate-service
     ports:
       - "8070:8070"
@@ -87,8 +89,7 @@ services:
       interval: 10s
       retries: 4
     depends_on:
-      config-server:
-        condition: service_healthy
+      - candidatedb
 
   web:
     image: anassbe/flask_app-web
@@ -137,7 +138,3 @@ services:
       - CONFIG_SERVICE_URL=http://config-server:9999
     depends_on:
       - keycloak
-
-volumes:
-  postgres-data:
-  db-data:
