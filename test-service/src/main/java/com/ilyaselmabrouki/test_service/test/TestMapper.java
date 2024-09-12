@@ -10,7 +10,7 @@ public class TestMapper {
                 .candidateId(request.getCandidateId())
                 .offerId(request.getOfferId())
                 .applicationId(request.getApplicationId())
-                .score(0.0)
+                .score(0)
                 .build();
     }
 

@@ -9,5 +9,4 @@ public class QuestionResponse {
     private String question;
     private List<String> options;
     private String answer;
-    private Integer score;
 }

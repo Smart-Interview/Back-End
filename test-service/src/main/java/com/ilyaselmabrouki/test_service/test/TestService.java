@@ -22,11 +22,11 @@ public class TestService {
     private final TestRepository repository;
     private final CandidateClient candidateClient;
     private final OfferClient offerClient;
-    //private final QuestionClient questionClient;
+    private final QuestionClient questionClient;
     private final ApplicationClient applicationClient;
     private final TestMapper mapper;
 
-    public Integer createTest(TestRequest request) {
+    public List<QuestionResponse> createTest(TestRequest request) {
         //Fetch candidate details from the Candidate Service
         candidateClient.findCandidateById(request.getCandidateId());
 
@@ -36,9 +36,14 @@ public class TestService {
         //Fetch application details from the Application Service
         applicationClient.findApplicationById(request.getApplicationId());
 
+        //Store test in database
         Test test = mapper.toTest(request);
+        Integer testId = repository.save(test).getId();
 
-        return repository.save(test).getId();
+        //Generate questions from question service
+        QuestionRequest questionRequest = new QuestionRequest(testId, request.getOfferId());
+
+        return questionClient.getQuestions(questionRequest);
     }
 
     public List<TestResponse> getTests() {
@@ -54,10 +59,17 @@ public class TestService {
                 .orElseThrow(()-> new TestNotFoundException("No test found"));
     }
 
-//    public List<QuestionResponse> getQuestions(Integer id) {
-//        //  Fetch offer details from the Offer Service
-//        Integer offerId = 1;
-//        QuestionRequest request = new QuestionRequest(id, offerId);
-//        return questionClient.getQuestions(request);
-//    }
+    public ResultResponse calculateResult(Integer id, List<ResultRequest> answers) {
+        Integer result = 0;
+        for (ResultRequest answer:answers) {
+            if (answer.getTestAnswer().equals(answer.getCandidateAnswer())) result++;
+        }
+
+        //Update score of the test
+        Test test = repository.findById(id).orElseThrow(() -> new TestNotFoundException("No test found"));
+        test.setScore(result);
+        repository.save(test);
+
+        return new ResultResponse(answers.size(), result);
+    }
 }
