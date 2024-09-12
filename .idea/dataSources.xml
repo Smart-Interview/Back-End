@@ -29,11 +29,11 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="job_matching@localhost" uuid="b996c75c-5ce2-419e-aad8-523f5e9298a0">
-      <driver-ref>mysql.8</driver-ref>
+    <data-source source="LOCAL" name="offerDB@localhost" uuid="d1bdf39c-e6ed-4bbd-bf15-8a8fed7422d7">
+      <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3307/job_matching</jdbc-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5431/offerDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
