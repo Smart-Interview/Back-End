@@ -11,7 +11,7 @@ services:
       - '5431:5432'
 
   discovery-server:
-    image: ilyaselmabrouki/discovery-server:v1
+    build: ./discovery-server
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -27,7 +27,7 @@ services:
       - offerdb
 
   config-server:
-    image: ilyaselmabrouki/config-server:v1
+    build: ./config-server
     container_name: config-server
     ports:
       - "9999:9999"
@@ -63,83 +63,118 @@ services:
       config-server:
         condition: service_healthy
 
-  candidatedb:
-    image: postgres:latest
-    container_name: candidate_db
-    environment:
-      - POSTGRES_PASSWORD=ilyas
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=candidateDB
+#  candidatedb:
+#    image: postgres:latest
+#    container_name: candidate_db
+#    environment:
+#      - POSTGRES_PASSWORD=ilyas
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_DB=candidateDB
+#    ports:
+#      - '5432:5432'
+#    depends_on:
+#      offer-service:
+#        condition: service_healthy
+#
+#  candidate-service:
+#    image: ilyaselmabrouki/candidate-service:v1
+#    container_name: candidate-service
+#    ports:
+#      - "8070:8070"
+#    environment:
+#      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+#      - CONFIG_SERVICE_URL=http://config-server:9999
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8070/actuator/health" ]
+#      interval: 10s
+#      retries: 4
+#    depends_on:
+#      - candidatedb
+
+#  web:
+#    image: anassbe/flask_app-web
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      - GENAI_API_KEY=${GENAI_API_KEY}
+#      - DB_HOST=db
+#      - DB_USER=root
+#      - DB_PASSWORD=anass
+#      - DB_NAME=job_matching
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: mysql:8.0
+#    environment:
+#      MYSQL_ROOT_PASSWORD: anass
+#      MYSQL_DATABASE: job_matching
+#    ports:
+#      - "3307:3306"
+#    volumes:
+#      - db-data:/var/lib/mysql
+
+  question-service:
+    image: ilyass20/qst-generation-app:latest
+    container_name: question-service
     ports:
-      - '5432:5432'
+      - "5000:5000"
     depends_on:
       offer-service:
         condition: service_healthy
 
-  candidate-service:
-    image: ilyaselmabrouki/candidate-service:v1
-    container_name: candidate-service
+  testdb:
+    image: postgres:latest
+    container_name: test_db
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=testDB
     ports:
-      - "8070:8070"
+      - '5435:5432'
+    depends_on:
+      offer-service:
+        condition: service_healthy
+
+  test-service:
+    build: ./test-service
+    container_name: test-service
+    ports:
+      - "8060:8060"
     environment:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
       - CONFIG_SERVICE_URL=http://config-server:9999
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8070/actuator/health" ]
-      interval: 10s
-      retries: 4
+      test: [ "CMD", "curl", "-f", "http://localhost:8060/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     depends_on:
-      - candidatedb
+      - testdb
 
-  web:
-    image: anassbe/flask_app-web
-    ports:
-      - "5000:5000"
-    environment:
-      - GENAI_API_KEY=${GENAI_API_KEY}
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=anass
-      - DB_NAME=job_matching
-    depends_on:
-      - db
 
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: anass
-      MYSQL_DATABASE: job_matching
-    ports:
-      - "3307:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-
-  question-service:
-    image:
-    ports:
-      - "5000:5000"
-
-  keycloak:
-    container_name: keycloak-ms
-    image: quay.io/keycloak/keycloak:24.0.2
-    ports:
-      - "9090:8080"
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    command:
-      - "start-dev"
-    depends_on:
-      candidate-service:
-        condition: service_healthy
-
-  gateway:
-    build: ./gateway
-    container_name: gateway
-    ports:
-      - "8222:8222"
-    environment:
-      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
-      - CONFIG_SERVICE_URL=http://config-server:9999
-    depends_on:
-      - keycloak
+#  keycloak:
+#    container_name: keycloak-ms
+#    image: quay.io/keycloak/keycloak:24.0.2
+#    ports:
+#      - "9090:8080"
+#    environment:
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    command:
+#      - "start-dev"
+#    depends_on:
+#      candidate-service:
+#        condition: service_healthy
+#
+#  gateway:
+#    build: ./gateway
+#    container_name: gateway
+#    ports:
+#      - "8222:8222"
+#    environment:
+#      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+#      - CONFIG_SERVICE_URL=http://config-server:9999
+#    depends_on:
+#      - keycloak
