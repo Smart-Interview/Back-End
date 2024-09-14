@@ -1,17 +1,7 @@
 version: '3.8'
 services:
-  offerdb:
-    image: postgres:latest
-    container_name: offer_db
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=offerDB
-    ports:
-      - '5431:5432'
-
   discovery-server:
-    image: ilyaselmabrouki/discovery-server:v1
+    build: ./discovery-server
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -23,11 +13,9 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
-    depends_on:
-      - offerdb
 
   config-server:
-    image: ilyaselmabrouki/config-server:v1
+    build: ./config-server
     container_name: config-server
     ports:
       - "9999:9999"
@@ -45,8 +33,21 @@ services:
       discovery-server:
         condition: service_healthy
 
+  offerdb:
+    image: postgres:latest
+    container_name: offer_db
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=offerDB
+    ports:
+      - '5431:5432'
+    depends_on:
+      config-server:
+        condition: service_healthy
+
   offer-service:
-    image: ilyaselmabrouki/offer-service:v1
+    build: ./offer-service
     container_name: offer-service
     ports:
       - "8040:8040"
@@ -60,8 +61,7 @@ services:
       retries: 5
       start_period: 40s
     depends_on:
-      config-server:
-        condition: service_healthy
+      - offerdb
 
   candidatedb:
     image: postgres:latest
@@ -77,7 +77,7 @@ services:
         condition: service_healthy
 
   candidate-service:
-    image: ilyaselmabrouki/candidate-service:v1
+    build: ./candidate-service
     container_name: candidate-service
     ports:
       - "8070:8070"
@@ -91,21 +91,9 @@ services:
     depends_on:
       - candidatedb
 
-  web:
-    image: anassbe/flask_app-web
-    ports:
-      - "5000:5000"
-    environment:
-      - GENAI_API_KEY=${GENAI_API_KEY}
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=anass
-      - DB_NAME=job_matching
-    depends_on:
-      - db
-
-  db:
-    image: mysql:8.0
+  matchingdb:
+    image: anassbe/db_matching-service
+    container_name: matching_db
     environment:
       MYSQL_ROOT_PASSWORD: anass
       MYSQL_DATABASE: job_matching
@@ -113,6 +101,61 @@ services:
       - "3307:3306"
     volumes:
       - db-data:/var/lib/mysql
+    depends_on:
+      candidate-service:
+        condition: service_healthy
+
+  matching-service:
+    image: anassbe/matching-service
+    container_name: matching-service
+    ports:
+      - "5000:5000"
+    environment:
+      - GENAI_API_KEY=AIzaSyBOntkalUbDDmfDX1KFObU3HFvbc_ca35Q
+      - DB_HOST=matching_db
+      - DB_USER=root
+      - DB_PASSWORD=anass
+      - DB_NAME=job_matching
+    depends_on:
+      - matchingdb
+
+  question-service:
+    image: ilyass20/qst-generation-app:latest
+    container_name: question-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      matching-service:
+        condition: service_healthy
+
+  testdb:
+    image: postgres:latest
+    container_name: test_db
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=testDB
+    ports:
+      - '5435:5432'
+    depends_on:
+      - question-service
+
+  test-service:
+    build: ./test-service
+    container_name: test-service
+    ports:
+      - "8060:8060"
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+      - CONFIG_SERVICE_URL=http://config-server:9999
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8060/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      - testdb
 
   keycloak:
     container_name: keycloak-ms
@@ -125,7 +168,7 @@ services:
     command:
       - "start-dev"
     depends_on:
-      candidate-service:
+      test-service:
         condition: service_healthy
 
   gateway:
@@ -138,3 +181,6 @@ services:
       - CONFIG_SERVICE_URL=http://config-server:9999
     depends_on:
       - keycloak
+
+volumes:
+  db-data:

@@ -8,6 +8,6 @@ public class ApplicationResponse {
     private Integer id;
     private Integer candidateId;
     private Integer offerId;
-    private String cvPath;
+    private Integer cvId;
     private ApplicationStatus status;
 }
