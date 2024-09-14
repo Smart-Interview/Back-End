@@ -12,6 +12,6 @@ import java.util.Optional;
 )
 public interface OfferClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     Optional<OfferResponse> findOfferById(@PathVariable("id") Integer id);
 }

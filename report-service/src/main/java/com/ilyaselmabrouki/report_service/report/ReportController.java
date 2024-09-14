@@ -2,6 +2,7 @@ package com.ilyaselmabrouki.report_service.report;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,5 +23,10 @@ public class ReportController {
     @GetMapping
     public ResponseEntity<List<ReportResponse>> getAllReports(){
         return ResponseEntity.ok(reportService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable Integer id){
+        return ResponseEntity.ok(reportService.getReportById(id));
     }
 }

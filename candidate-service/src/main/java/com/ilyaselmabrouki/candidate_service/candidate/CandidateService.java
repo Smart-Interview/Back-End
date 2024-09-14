@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,5 +55,19 @@ public class CandidateService {
         var candidate = repository.findById(id)
                 .orElseThrow(()-> new CandidateNotFoundException("Cannot found Candidate"));
         repository.delete(candidate);
+    }
+
+    public List<CandidateResponse> findCandidatesByIds(List<Integer> candidateIds) {
+        // Remove duplicates by converting the list to a set
+        Set<Integer> uniqueCandidateIds = new HashSet<>(candidateIds);
+
+        // Stream over the unique IDs and map each to a CandidateResponse
+        return uniqueCandidateIds.stream()
+                .map(id -> {
+                    Candidate candidate = repository.findById(id)
+                            .orElseThrow(() -> new CandidateNotFoundException("Candidate with ID " + id + " not found"));
+                    return mapper.fromCandidate(candidate);
+                })
+                .collect(Collectors.toList());
     }
 }

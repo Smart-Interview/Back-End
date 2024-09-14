@@ -1,5 +1,6 @@
 package com.ilyaselmabrouki.application_service.application;
 
+import com.ilyaselmabrouki.application_service.report.ApplicationReponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,11 +35,16 @@ public class ApplicationController {
         return ResponseEntity.ok(service.findApplication(id));
     }
 
-    @GetMapping("/candidate/{candidateId}")
+    @GetMapping("/candidate")
     public ResponseEntity<List<ApplicationResponse>> findApplicationsByCandidateId(
-            @PathVariable Integer candidateId
+            @RequestParam Integer candidateId
     ){
         return ResponseEntity.ok(service.findApplicationsByCandidateId(candidateId));
+    }
+
+    @GetMapping("/offer")
+    public ResponseEntity<List<ApplicationReponse>> findApplicationsByOfferId(@RequestParam Integer offerId){
+        return ResponseEntity.ok(service.findCandidatesByOfferIdAndStatus(offerId));
     }
 
 }
