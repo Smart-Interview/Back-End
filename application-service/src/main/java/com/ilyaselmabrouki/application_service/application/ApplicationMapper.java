@@ -1,9 +1,14 @@
 package com.ilyaselmabrouki.application_service.application;
 
+import com.ilyaselmabrouki.application_service.file.FileService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class ApplicationMapper {
+
+    private final FileService fileService;
 
     public Application toApplication(ApplicationRequest request){
         return Application.builder()
@@ -19,7 +24,7 @@ public class ApplicationMapper {
                 application.getId(),
                 application.getCandidateId(),
                 application.getOfferId(),
-                application.getCv().getPath(),
+                application.getCv().getId(),
                 application.getStatus()
         );
     }

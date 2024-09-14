@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<File, Integer> {
 
-    Optional<File> findByName(String name);
+    Optional<File> findById(Integer id);
 }
