@@ -27,8 +27,8 @@ public class FileService {
         return file;
     }
 
-    public byte[] downloadFile(String fileName) throws IOException {
-        Optional<File> data = repository.findByName(fileName);
+    public byte[] downloadFile(Integer id) throws IOException {
+        Optional<File> data = repository.findById(id);
         String filePath = data.get().getPath();
         return Files.readAllBytes(new java.io.File(filePath).toPath());
     }

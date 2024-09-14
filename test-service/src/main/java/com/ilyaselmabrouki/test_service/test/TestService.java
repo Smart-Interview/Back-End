@@ -27,14 +27,14 @@ public class TestService {
     private final TestMapper mapper;
 
     public List<QuestionResponse> createTest(TestRequest request) {
-        //Fetch candidate details from the Candidate Service
-        candidateClient.findCandidateById(request.getCandidateId());
-
-        //Fetch offer details from the Offer Service
-        offerClient.findOfferById(request.getOfferId());
-
-        //Fetch application details from the Application Service
-        applicationClient.findApplicationById(request.getApplicationId());
+//        //Fetch candidate details from the Candidate Service
+//        candidateClient.findCandidateById(request.getCandidateId());
+//
+//        //Fetch offer details from the Offer Service
+//        offerClient.findOfferById(request.getOfferId());
+//
+//        //Fetch application details from the Application Service
+//        applicationClient.findApplicationById(request.getApplicationId());
 
         //Store test in database
         Test test = mapper.toTest(request);

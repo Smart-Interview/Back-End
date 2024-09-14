@@ -27,11 +27,11 @@ public class ApplicationService {
     private final FileService fileService;
 
     public Integer createApplication(ApplicationRequest request) throws IOException {
-        //Check candidate ID
-        candidateClient.findCandidateById(request.getCandidateId());
-
-        //Check Offer ID
-        offerClient.findOfferById(request.getOfferId());
+//        //Check candidate ID
+//        candidateClient.findCandidateById(request.getCandidateId());
+//
+//        //Check Offer ID
+//        offerClient.findOfferById(request.getOfferId());
 
         //Save Application in DB
         Application application = mapper.toApplication(request);
@@ -41,24 +41,19 @@ public class ApplicationService {
         analyzeCvAsync(savedApplication.getId(), request.getOfferId(), request.getCv());
 
         //Store File
-        application.setCv(fileService.uploadFile(request.getCv()));
+        savedApplication.setCv(fileService.uploadFile(request.getCv()));
+        repository.save(savedApplication);
 
         //Add application in DB
         return savedApplication.getId();
     }
 
     private void analyzeCvAsync(Integer applicationId, Integer offerId, MultipartFile cv) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                // Communicate with CV Analysis Service
-                AnalyseResponse result = analyseClient.analyzeCv(applicationId, offerId, cv);
+        // Communicate with CV Analysis Service
+        AnalyseResponse result = analyseClient.analyzeCv(applicationId, offerId, cv);
 
-                // Update application status based on the analysis result
-                updateApplicationStatus(result.getApplicationId(), result.getStatus());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        // Update application status based on the analysis result
+        updateApplicationStatus(result.getApplicationId(), result.getStatus());
     }
 
     private void updateApplicationStatus(Integer applicationId, ApplicationStatus status) {

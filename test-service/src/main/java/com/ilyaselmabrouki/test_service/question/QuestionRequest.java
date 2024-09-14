@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class QuestionRequest {
-    private Integer testId;
-    private Integer offerId;
+    private Integer test_id;
+    private Integer offer_id;
 }
