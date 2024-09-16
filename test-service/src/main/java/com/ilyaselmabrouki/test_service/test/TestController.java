@@ -11,12 +11,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/tests")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class TestController {
 
     private final TestService service;
 
     @PostMapping
-    public ResponseEntity<List<QuestionResponse>> createTest(@RequestBody @Valid TestRequest test){
+    public ResponseEntity<Integer> createTest(@RequestBody @Valid TestRequest test){
         return ResponseEntity.ok(service.createTest(test));
     }
 
@@ -26,7 +27,7 @@ public class TestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TestResponse> findTest(@PathVariable Integer id){
+    public ResponseEntity<List<QuestionResponse>> findTest(@PathVariable Integer id){
         return ResponseEntity.ok(service.findTest(id));
     }
 
