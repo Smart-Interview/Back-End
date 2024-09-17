@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   discovery-server:
-    build: ./discovery-server
+    image: ilyaselmabrouki/discovery-server:latest
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    build: ./config-server
+    image: ilyaselmabrouki/config-server:latest
     container_name: config-server
     ports:
       - "9999:9999"
@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   offer-service:
-    build: ./offer-service
+    image: ilyaselmabrouki/offer-service:latest
     container_name: offer-service
     ports:
       - "8040:8040"
@@ -78,14 +78,14 @@ services:
         condition: service_healthy
 
   candidate-service:
-    build: ./candidate-service
+    image: ilyaselmabrouki/candidate-service:latest
     container_name: candidate-service
     ports:
       - "8070:8070"
     environment:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
       - CONFIG_SERVICE_URL=http://config-server:9999
-      - CANDIDATE_DB_URl=jdbc:postgresql://candidate_db:5432/candidateDB
+      - CANDIDATE_DB_URL=jdbc:postgresql://candidate_db:5432/candidateDB
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8070/actuator/health" ]
       interval: 30s
@@ -136,7 +136,7 @@ services:
       - matching-service
 
   application-service:
-    build: ./application-service
+    image: ilyaselmabrouki/application-service:latest
     container_name: application-service
     ports:
       - "8050:8050"
@@ -145,7 +145,7 @@ services:
       - CONFIG_SERVICE_URL=http://config-server:9999
       - APPLICATION_DB_URL=jdbc:postgresql://application_db:5432/applicationDB
       - CANDIDATE_SERVICE_URL=http://candidate-service:8070/api/v1/candidates
-      - MATCHING_SERVICE_URL=http://matching-service:5000
+      - OFFER_SERVICE_URL=http://offer-service:8040/api/v1/offers
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8050/actuator/health" ]
       interval: 30s
@@ -177,7 +177,7 @@ services:
       - question-service
 
   test-service:
-    build: ./test-service
+    image: ilyaselmabrouki/test-service:latest
     container_name: test-service
     ports:
       - "8060:8060"
