@@ -1,5 +1,6 @@
 package com.ilyaselmabrouki.application_service.application;
 
+import com.ilyaselmabrouki.application_service.candidate.CandidateResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,4 +11,5 @@ public class ApplicationResponse {
     private Integer offerId;
     private Integer cvId;
     private ApplicationStatus status;
+    private CandidateResponse candidate;
 }

@@ -26,24 +26,19 @@ public class TestService {
     private final ApplicationClient applicationClient;
     private final TestMapper mapper;
 
-    public List<QuestionResponse> createTest(TestRequest request) {
+    public Integer createTest(TestRequest request) {
 //        //Fetch candidate details from the Candidate Service
 //        candidateClient.findCandidateById(request.getCandidateId());
 //
-//        //Fetch offer details from the Offer Service
-//        offerClient.findOfferById(request.getOfferId());
+        //Fetch offer details from the Offer Service
+        offerClient.findOfferById(request.getOfferId());
 //
 //        //Fetch application details from the Application Service
 //        applicationClient.findApplicationById(request.getApplicationId());
 
         //Store test in database
         Test test = mapper.toTest(request);
-        Integer testId = repository.save(test).getId();
-
-        //Generate questions from question service
-        QuestionRequest questionRequest = new QuestionRequest(testId, request.getOfferId());
-
-        return questionClient.getQuestions(questionRequest);
+        return repository.save(test).getId();
     }
 
     public List<TestResponse> getTests() {
@@ -53,10 +48,15 @@ public class TestService {
                 .collect(Collectors.toList());
     }
 
-    public TestResponse findTest(Integer id) {
-        return repository.findById(id)
+    public List<QuestionResponse> findTest(Integer id) {
+        TestResponse testResponse = repository.findById(id)
                 .map(mapper::fromTest)
                 .orElseThrow(()-> new TestNotFoundException("No test found"));
+
+        //Generate questions from question service
+        QuestionRequest questionRequest = new QuestionRequest(testResponse.getId(), testResponse.getOfferId());
+
+        return questionClient.getQuestions(questionRequest);
     }
 
     public ResultResponse calculateResult(Integer id, List<ResultRequest> answers) {

@@ -12,6 +12,7 @@
         <module name="discovery-server" />
         <module name="offer-service" />
         <module name="test-service" />
+        <module name="report-service" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
@@ -33,6 +34,7 @@
       <module name="discovery-server" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="offer-service" options="-parameters" />
+      <module name="report-service" options="-parameters" />
       <module name="test-service" options="-parameters" />
     </option>
   </component>

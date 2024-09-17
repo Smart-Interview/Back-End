@@ -39,6 +39,11 @@ public class CandidateController {
         return ResponseEntity.ok(service.findCandidate(id));
     }
 
+    @PostMapping("/ids")
+    public ResponseEntity<List<CandidateResponse>> findCandidatesByIds(@RequestBody List<Integer> candidateIds){
+        return ResponseEntity.ok(service.findCandidatesByIds(candidateIds));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCandidate(@PathVariable Integer id){
         service.deleteCandidate(id);

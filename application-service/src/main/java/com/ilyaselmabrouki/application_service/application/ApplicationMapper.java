@@ -25,7 +25,8 @@ public class ApplicationMapper {
                 application.getCandidateId(),
                 application.getOfferId(),
                 application.getCv().getId(),
-                application.getStatus()
+                application.getStatus(),
+                null
         );
     }
 }
