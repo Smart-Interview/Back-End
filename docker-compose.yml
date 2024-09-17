@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:v2
+    image: ilyaselmabrouki/config-server:v3
     container_name: config-server
     ports:
       - "9999:9999"
@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   offer-service:
-    image: ilyaselmabrouki/offer-service:latest
+    image: ilyaselmabrouki/offer-service:v3
     container_name: offer-service
     ports:
       - "8040:8040"
@@ -78,7 +78,7 @@ services:
         condition: service_healthy
 
   candidate-service:
-    image: ilyaselmabrouki/candidate-service:latest
+    image: ilyaselmabrouki/candidate-service:v3
     container_name: candidate-service
     ports:
       - "8070:8070"
@@ -136,7 +136,7 @@ services:
       - matching-service
 
   application-service:
-    image: ilyaselmabrouki/application-service:latest
+    image: ilyaselmabrouki/application-service:v2
     container_name: application-service
     ports:
       - "8050:8050"
@@ -146,6 +146,7 @@ services:
       - APPLICATION_DB_URL=jdbc:postgresql://application_db:5432/applicationDB
       - CANDIDATE_SERVICE_URL=http://candidate-service:8070/api/v1/candidates
       - OFFER_SERVICE_URL=http://offer-service:8040/api/v1/offers
+      - MATCHING_SERVICE_URL=http://matching-service:5000
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8050/actuator/health" ]
       interval: 30s
@@ -177,7 +178,7 @@ services:
       - question-service
 
   test-service:
-    image: ilyaselmabrouki/test-service:latest
+    image: ilyaselmabrouki/test-service:v2
     container_name: test-service
     ports:
       - "8060:8060"
@@ -185,8 +186,10 @@ services:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
       - CONFIG_SERVICE_URL=http://config-server:9999
       - TEST_DB_URL=jdbc:postgresql://test_db:5432/testDB
-      - OFFER_SERVICE_URL=http://offer-service:8040/api/v1/offers/id
+      - OFFER_SERVICE_URL=http://offer-service:8040/api/v1/offers
       - APPLICATION_SERVICE_URL=http://application-service:8050/api/v1/applications
+      - CANDIDATE_SERVICE_URL=http://candidate-service:8070/api/v1/candidates
+      - QUESTION_SERVICE_URL=http://question-service:5000/generate_questions
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8060/actuator/health" ]
       interval: 30s

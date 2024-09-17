@@ -10,17 +10,16 @@ public class TestMapper {
                 .candidateId(request.getCandidateId())
                 .offerId(request.getOfferId())
                 .applicationId(request.getApplicationId())
-                .score(0)
+                .score(0.0)
                 .build();
     }
 
     public TestResponse fromTest(Test test){
         return new TestResponse(
                 test.getId(),
-                test.getCandidateId(),
-                test.getOfferId(),
-                test.getApplicationId(),
-                test.getScore()
+                null,
+                test.getScore(),
+                test.getCreatedAt()
         );
     }
 }

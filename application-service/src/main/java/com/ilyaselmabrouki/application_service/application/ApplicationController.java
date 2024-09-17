@@ -3,6 +3,8 @@ package com.ilyaselmabrouki.application_service.application;
 import com.ilyaselmabrouki.application_service.report.ApplicationReponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,21 +28,18 @@ public class ApplicationController {
         return ResponseEntity.ok(service.createApplication(request));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ApplicationResponse>> getAllApplications(){
-        return ResponseEntity.ok(service.getAllApplications());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ApplicationResponse> findApplication(@PathVariable Integer id){
         return ResponseEntity.ok(service.findApplication(id));
     }
 
-    @GetMapping("/candidate")
-    public ResponseEntity<List<ApplicationResponse>> findApplicationsByCandidateId(
-            @RequestParam Integer candidateId
-    ){
-        return ResponseEntity.ok(service.findApplicationsByCandidateId(candidateId));
+    @GetMapping
+    public ResponseEntity<Page<ApplicationResponse>> findApplicationsByCandidateId(
+            @RequestParam Integer candidateId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size
+            ){
+        return ResponseEntity.ok(service.findApplicationsByCandidateId(candidateId, page, size));
     }
 
     @GetMapping("/offer")

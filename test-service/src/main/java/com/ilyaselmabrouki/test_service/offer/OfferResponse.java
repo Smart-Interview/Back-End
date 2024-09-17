@@ -6,6 +6,7 @@ import lombok.Data;
 public class OfferResponse {
     private Integer id;
     private String title;
-    private String description_path;
-    private Integer company;
+    private String descriptionFilePath;
+    private String requirements;
+    private Integer recruiter;
 }

@@ -5,16 +5,22 @@ import com.ilyaselmabrouki.application_service.analyse.AnalyseResponse;
 import com.ilyaselmabrouki.application_service.candidate.CandidateClient;
 import com.ilyaselmabrouki.application_service.candidate.CandidateResponse;
 import com.ilyaselmabrouki.application_service.exception.ApplicationNotFoundException;
+import com.ilyaselmabrouki.application_service.exception.OfferNotFoundException;
 import com.ilyaselmabrouki.application_service.file.FileService;
 import com.ilyaselmabrouki.application_service.offer.OfferClient;
+import com.ilyaselmabrouki.application_service.offer.OfferResponse;
 import com.ilyaselmabrouki.application_service.report.ApplicationReponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,27 +77,40 @@ public class ApplicationService {
         repository.save(application);
     }
 
-    public List<ApplicationResponse> getAllApplications() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::fromApplication)
-                .collect(Collectors.toList());
-    }
-
     public ApplicationResponse findApplication(Integer id) {
         return repository.findById(id)
                 .map(mapper::fromApplication)
                 .orElseThrow(()-> new ApplicationNotFoundException("No Application found"));
     }
 
-    public List<ApplicationResponse> findApplicationsByCandidateId(Integer candidateId) {
-        //Check candidate ID
+    public Page<ApplicationResponse> findApplicationsByCandidateId(Integer candidateId, int page, int size) {
+        // Check candidate ID (add error handling if candidate not found)
         candidateClient.findCandidateById(candidateId);
 
-        return repository.findApplicationsByCandidateId(candidateId)
-                .stream()
-                .map(mapper::fromApplication)
+        // Fetch applications
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Application> applications = repository.findApplicationsByCandidateId(candidateId, pageable);
+
+        // Fetch all offer responses in a single call (to avoid N+1 problem)
+        List<Integer> offerIds = applications.stream()
+                .map(Application::getOfferId)
                 .collect(Collectors.toList());
+
+        List<OfferResponse> offers = offerClient.findOffersByIds(offerIds);
+
+        Map<Integer, OfferResponse> offerMap = offers.stream()
+                .collect(Collectors.toMap(OfferResponse::getId, offer -> offer));
+
+        // Map applications to responses
+        return applications.map(application -> {
+                    OfferResponse offerResponse = offerMap.get(application.getOfferId());
+                    if (offerResponse == null) {
+                        throw new OfferNotFoundException("Offer not found");
+                    }
+                    ApplicationResponse applicationResponse = mapper.fromApplication(application);
+                    applicationResponse.setOffer(offerResponse);
+                    return applicationResponse;
+                });
     }
 
     public List<ApplicationReponse> findCandidatesByOfferIdAndStatus(Integer offerId) {

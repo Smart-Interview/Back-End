@@ -3,6 +3,7 @@ package com.ilyaselmabrouki.test_service.test;
 import com.ilyaselmabrouki.test_service.question.QuestionResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +22,13 @@ public class TestController {
         return ResponseEntity.ok(service.createTest(test));
     }
 
-    @GetMapping("/candidate/{id}")
-    public ResponseEntity<List<TestResponse>> getAllTests(@PathVariable Integer candidateId){
-        return ResponseEntity.ok(service.getTests(candidateId));
+    @GetMapping
+    public ResponseEntity<Page<TestResponse>> getAllTests(
+            @RequestParam Integer candidateId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(service.getTests(candidateId, page, size));
     }
 
     @GetMapping("/{id}")
@@ -32,7 +37,7 @@ public class TestController {
     }
 
     @PostMapping("{id}/result")
-    public ResponseEntity<ResultResponse> calculateResult(@PathVariable Integer id, @RequestBody @Valid List<ResultRequest> answers){
+    public ResponseEntity<Double> calculateResult(@PathVariable Integer id, @RequestBody @Valid List<ResultRequest> answers){
         return ResponseEntity.ok(service.calculateResult(id,answers));
     }
 }

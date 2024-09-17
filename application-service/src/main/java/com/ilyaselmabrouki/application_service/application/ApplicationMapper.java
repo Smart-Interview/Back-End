@@ -22,11 +22,10 @@ public class ApplicationMapper {
     public ApplicationResponse fromApplication(Application application){
         return new ApplicationResponse(
                 application.getId(),
-                application.getCandidateId(),
-                application.getOfferId(),
+                null,
                 application.getCv().getId(),
                 application.getStatus(),
-                null
+                application.getCreatedAt()
         );
     }
 }

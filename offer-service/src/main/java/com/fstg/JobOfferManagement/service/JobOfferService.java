@@ -21,6 +21,8 @@ public interface JobOfferService {
 
 	JobOfferResponseDto update(JobOfferRequestDto dto,Integer id) throws NotFoundException;
 
-	//JobOfferResponseDto findByRecruiter(Integer Rec);
+    List<JobOfferResponseDto> findOffersByIds(List<Integer> offerIds);
+
+    //JobOfferResponseDto findByRecruiter(Integer Rec);
 
 }

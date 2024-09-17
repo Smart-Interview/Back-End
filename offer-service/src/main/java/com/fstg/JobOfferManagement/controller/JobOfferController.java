@@ -43,6 +43,11 @@ public class JobOfferController {
 		return new ResponseEntity<> (service.findAll(),HttpStatus.OK) ;
 	}
 
+	@PostMapping("/ids")
+	public ResponseEntity<List<JobOfferResponseDto>> findOffersByIds(@RequestBody List<Integer> offerIds){
+		return ResponseEntity.ok(service.findOffersByIds(offerIds));
+	}
+
 	@PostMapping
 	public ResponseEntity<JobOfferResponseDto> save(
         @RequestParam("pdfFile") MultipartFile file,

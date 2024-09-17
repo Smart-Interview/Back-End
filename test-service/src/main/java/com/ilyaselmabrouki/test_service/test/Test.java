@@ -20,7 +20,7 @@ public class Test {
     private Integer candidateId;
     private Integer offerId;
     private Integer applicationId;
-    private Integer score;
+    private Double score;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;

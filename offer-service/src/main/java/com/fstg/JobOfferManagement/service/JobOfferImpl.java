@@ -1,7 +1,9 @@
 package com.fstg.JobOfferManagement.service;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -90,7 +92,22 @@ public  class JobOfferImpl implements JobOfferService {
 		}
 
 	}
-	
+
+	@Override
+	public List<JobOfferResponseDto> findOffersByIds(List<Integer> offerIds) {
+		// Remove duplicates by converting the list to a set
+		Set<Integer> uniqueCandidateIds = new HashSet<>(offerIds);
+
+		// Stream over the unique IDs and map each to a CandidateResponse
+		return uniqueCandidateIds.stream()
+				.map(id -> {
+					JobOffer offer = dao.findById(id)
+							.orElseThrow(() -> new RuntimeException("Offer with ID " + id + " not found"));
+					return mapper.map(offer,JobOfferResponseDto.class);
+				})
+				.collect(Collectors.toList());
+	}
+
 	@Override
 	public List<JobOfferResponseDto> findAll(){
 		return dao.findAll().stream()
