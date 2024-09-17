@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:latest
+    image: ilyaselmabrouki/config-server:v2
     container_name: config-server
     ports:
       - "9999:9999"
