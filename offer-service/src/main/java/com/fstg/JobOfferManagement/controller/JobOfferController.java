@@ -1,6 +1,5 @@
 package com.fstg.JobOfferManagement.controller;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +24,7 @@ import java.io.File;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/offers")
 public class JobOfferController {

@@ -27,22 +27,22 @@ public class TestService {
     private final TestMapper mapper;
 
     public Integer createTest(TestRequest request) {
-//        //Fetch candidate details from the Candidate Service
-//        candidateClient.findCandidateById(request.getCandidateId());
-//
+        //Fetch candidate details from the Candidate Service
+        candidateClient.findCandidateById(request.getCandidateId());
+
         //Fetch offer details from the Offer Service
         offerClient.findOfferById(request.getOfferId());
-//
-//        //Fetch application details from the Application Service
-//        applicationClient.findApplicationById(request.getApplicationId());
+
+        //Fetch application details from the Application Service
+        applicationClient.findApplicationById(request.getApplicationId());
 
         //Store test in database
         Test test = mapper.toTest(request);
         return repository.save(test).getId();
     }
 
-    public List<TestResponse> getTests() {
-        return repository.findAll()
+    public List<TestResponse> getTests(Integer candidateId) {
+        return repository.findAllByCandidateId(candidateId)
                 .stream()
                 .map(mapper::fromTest)
                 .collect(Collectors.toList());

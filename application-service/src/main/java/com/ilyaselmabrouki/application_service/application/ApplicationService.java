@@ -40,7 +40,7 @@ public class ApplicationService {
         var savedApplication = repository.save(application);
 
         //Trigger CV Analysis (asynchronously)
-        //analyzeCvAsync(savedApplication.getId(), request.getOfferId(), request.getCv());
+        analyzeCvAsync(savedApplication.getId(), request.getOfferId(), request.getCv());
 
         //Store File
         savedApplication.setCv(fileService.uploadFile(request.getCv()));

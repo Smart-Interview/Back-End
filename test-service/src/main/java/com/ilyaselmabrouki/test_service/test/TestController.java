@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/tests")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class TestController {
 
     private final TestService service;
@@ -21,9 +21,9 @@ public class TestController {
         return ResponseEntity.ok(service.createTest(test));
     }
 
-    @GetMapping
-    public ResponseEntity<List<TestResponse>> getAllTests(){
-        return ResponseEntity.ok(service.getTests());
+    @GetMapping("/candidate/{id}")
+    public ResponseEntity<List<TestResponse>> getAllTests(@PathVariable Integer candidateId){
+        return ResponseEntity.ok(service.getTests(candidateId));
     }
 
     @GetMapping("/{id}")
