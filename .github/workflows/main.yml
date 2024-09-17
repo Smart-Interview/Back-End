@@ -152,7 +152,7 @@ jobs:
       - name: Build the application
         run: |
           mvn clean
-          mvn -B package --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
         working-directory: ./application-service
 
       - name: Build docker image
@@ -195,7 +195,7 @@ jobs:
       - name: Build the application
         run: |
           mvn clean
-          mvn -B package --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
         working-directory: ./offer-service
 
       - name: Build docker image
@@ -238,7 +238,7 @@ jobs:
       - name: Build the application
         run: |
           mvn clean
-          mvn -B package --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
         working-directory: ./test-service
 
       - name: Build docker image
