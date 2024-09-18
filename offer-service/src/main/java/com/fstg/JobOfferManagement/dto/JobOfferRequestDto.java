@@ -1,6 +1,7 @@
 package com.fstg.JobOfferManagement.dto;
 
 
+import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
@@ -10,51 +11,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class JobOfferRequestDto {
 	
-	@NotBlank(message = "title est obligatoire !!")
-    @Size(min = 5, message = "ce champ doit avoir au moins 5 charactere")
-    @Size(max = 20, message = "ce champs ne doit pas depasser 20 charactere")
+	private Integer id;
+
+	@NotBlank(message = "Title is required")
 	private String title;
 	
     @NotNull(message = "PDF file is required")
-    private MultipartFile pdfFile;  // Accept the PDF file
+    private MultipartFile pdfFile;
 	
-	@NotBlank(message = "requirements est obligatoire !!")
-    @Size(min = 10, message = "ce champ doit avoir au moins 10 charactere")
-    @Size(max = 50, message = "ce champs ne doit pas depasser 50 charactere")
-	private String requirements ;
-	
-	@NotNull(message = "recruiterId est obligatoire !!")
-	private Integer recruiter ;
-	
+	@NotNull(message = "Company ID is required")
+	private Integer company;
 
-	public String getRequirements() {
-		return requirements;
-	}
-	public void setRequirements(String requirements) {
-		this.requirements = requirements;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public Integer getRecruiter() {
-		return recruiter;
-	}
-	public void setRecruiter(Integer recruiter) {
-		this.recruiter = recruiter;
-	}
-	public MultipartFile getPdfFile() {
-		// TODO Auto-generated method stub
-		return pdfFile;
-	}
-	
-	
-
+	private LocalDate deadline;
 }

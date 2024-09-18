@@ -97,6 +97,6 @@ public class TestService {
         test.setScore((result * 100) / answers.size());
         repository.save(test);
 
-        return result;
+        return test.getScore();
     }
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-
+import lombok.AllArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +27,13 @@ import org.springframework.http.MediaType;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/offers")
+@AllArgsConstructor
 public class JobOfferController {
 
-	private final  FileStorageService fileStorageService;
 	private final JobOfferService service ;
-	
-	public JobOfferController(JobOfferService service,FileStorageService fileStorageService) {
-		this.service= service ;
-		this.fileStorageService=fileStorageService;
-	}
 	
 	@GetMapping
 	public ResponseEntity< List<JobOfferResponseDto> > getJobOffers(){
-		//return service.findAll();	
 		return new ResponseEntity<> (service.findAll(),HttpStatus.OK) ;
 	}
 
@@ -49,22 +43,10 @@ public class JobOfferController {
 	}
 
 	@PostMapping
-	public ResponseEntity<JobOfferResponseDto> save(
+	public ResponseEntity<Integer> save(
         @RequestParam("pdfFile") MultipartFile file,
         @Valid @ModelAttribute JobOfferRequestDto request) {
-    
-		// Call the service to save the job offer details
-		JobOfferResponseDto dto = service.save(request);
-
-		try {
-			// Call the file storage service to save the uploaded file
-			fileStorageService.saveDescriptionToFile(file, dto.getId());
-		} catch (IOException e) {
-			// Handle file storage exceptions
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-		return new ResponseEntity<>(dto, HttpStatus.CREATED);
+		return ResponseEntity.ok(service.save(file, request));
 	}
 	
 	@PutMapping("/{id}")
@@ -79,17 +61,7 @@ public class JobOfferController {
 		return ResponseEntity.ok(dto);
 	}
 	
-	@GetMapping("/title/{title}")
-	public JobOfferResponseDto findByTitle(@PathVariable String title) {
-		return service.findByTitle(title);
-	}
-	
-	
-	/*@GetMapping("/Offers/recruiter/{id}")
-	public JobOfferResponseDto findByRecruiter(@PathVariable Integer id) {
-		return service.findByRecruiter(id);
-	}
-	*/
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delet(@PathVariable Integer id) {
 		service.delete(id);

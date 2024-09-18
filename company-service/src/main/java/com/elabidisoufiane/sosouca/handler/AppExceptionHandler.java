@@ -1,4 +1,4 @@
-package com.elabidisoufiane.sosouca.exception.handler;
+package com.elabidisoufiane.sosouca.handler;
 
 import java.util.Date;
 import java.util.HashMap;

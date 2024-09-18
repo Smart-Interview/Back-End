@@ -1,4 +1,4 @@
-package com.fstg.JobOfferManagement.exception.handler;
+package com.fstg.JobOfferManagement.handler;
 
 import java.util.Date;
 import java.util.HashMap;
