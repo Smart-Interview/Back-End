@@ -13,6 +13,7 @@
         <module name="offer-service" />
         <module name="test-service" />
         <module name="report-service" />
+        <module name="company" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
@@ -30,6 +31,7 @@
       <module name="candidate-service" options="-parameters" />
       <module name="candidate-service (1)" options="-parameters" />
       <module name="candidate-service (2)" options="-parameters" />
+      <module name="company" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="gateway" options="-parameters" />
