@@ -6,6 +6,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,14 @@ import org.springframework.http.MediaType;
 public class JobOfferController {
 
 	private final JobOfferService service ;
-	
+
 	@GetMapping
-	public ResponseEntity< List<JobOfferResponseDto> > getJobOffers(){
-		return new ResponseEntity<> (service.findAll(),HttpStatus.OK) ;
+	public ResponseEntity<Page<JobOfferResponseDto>> getJobOffers(
+			@RequestParam Integer companyId,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size
+	){
+		return ResponseEntity.ok(service.findAll(companyId, page, size));
 	}
 
 	@PostMapping("/ids")
@@ -60,7 +65,6 @@ public class JobOfferController {
 		JobOfferResponseDto dto = service.findById(id) ;
 		return ResponseEntity.ok(dto);
 	}
-	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delet(@PathVariable Integer id) {

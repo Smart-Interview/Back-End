@@ -36,6 +36,11 @@ public class CompanyController {
 		return ResponseEntity.ok(service.findById(id));
 	}
 
+	@PostMapping("/ids")
+	public ResponseEntity<List<CompanyResponseDto>> findByIds(@RequestBody List<Integer> companyIds){
+		return ResponseEntity.ok(service.findByIds(companyIds));
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<CompanyResponseDto> update(@Valid @RequestBody CompanyRequestDto produitDto,
 			@PathVariable Integer id) throws NotFoundException {

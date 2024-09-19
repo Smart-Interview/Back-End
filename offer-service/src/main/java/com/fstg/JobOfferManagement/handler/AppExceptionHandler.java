@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fstg.JobOfferManagement.exception.CompanyNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,15 @@ import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class AppExceptionHandler {
-	
-	 @ExceptionHandler(value = {EntityNotFoundException.class})
+
+	@ExceptionHandler(value = CompanyNotFoundException.class)
+	public ResponseEntity<String> handle(CompanyNotFoundException ex){
+		return ResponseEntity
+				.status(HttpStatus.NOT_FOUND)
+				.body(ex.getMsg());
+	}
+
+ @ExceptionHandler(value = {EntityNotFoundException.class})
 	    public ResponseEntity<Object> entityNotFoundException(EntityNotFoundException ex) {
 	        ErrorMessage errorMessage = ErrorMessage.builder()
 	                .message(ex.getMessage())

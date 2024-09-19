@@ -14,8 +14,9 @@ import java.util.Optional;
         url = "${application.config.company-url}"
 )
 public interface CompanyClient {
-
     @GetMapping("/{id}")
     Optional<CompanyResponse> findCompanyById(@PathVariable("id") Integer id);
 
+    @PostMapping("/ids")
+    List<CompanyResponse> findByIds(@RequestBody List<Integer> companyIds);
 }

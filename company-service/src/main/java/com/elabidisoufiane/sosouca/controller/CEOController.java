@@ -43,11 +43,6 @@ public class CEOController {
         return ResponseEntity.ok(service.findCEO(id));
     }
 
-    @PostMapping("/ids")
-    public ResponseEntity<List<CEOResponse>> findCEOsByIds(@RequestBody List<Integer> candidateIds){
-        return ResponseEntity.ok(service.findCEOsByIds(candidateIds));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCEO(@PathVariable Integer id){
         service.deleteCEO(id);

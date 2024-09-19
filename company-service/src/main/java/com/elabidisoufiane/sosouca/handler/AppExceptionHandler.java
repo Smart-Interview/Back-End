@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.elabidisoufiane.sosouca.exception.CEONotFoundException;
+import com.elabidisoufiane.sosouca.exception.CompanyNotFoundException;
 import com.elabidisoufiane.sosouca.shared.ErrorMessage;
 import com.elabidisoufiane.sosouca.exception.EntityAlreadyExistsException;
 
@@ -17,6 +19,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class AppExceptionHandler {
+
+    @ExceptionHandler(value = CEONotFoundException.class)
+    public ResponseEntity<String> handle(CEONotFoundException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMsg());
+    }
+
+    @ExceptionHandler(value = CompanyNotFoundException.class)
+    public ResponseEntity<String> handle(CompanyNotFoundException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMsg());
+    }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
     public ResponseEntity<Object> entityNotFoundException(EntityNotFoundException ex) {

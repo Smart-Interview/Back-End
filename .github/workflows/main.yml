@@ -32,7 +32,7 @@ jobs:
           context: ./config-server
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:v4
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:v5
 
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -46,7 +46,7 @@ jobs:
           context: ./config-server
           dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:v4
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/config-server:v5
 
   build-and-push-discovery-service:
     name: Build Discovery Service Docker Image
@@ -161,7 +161,7 @@ jobs:
           context: ./application-service
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/application-service:v2
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/application-service:v3
 
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -175,7 +175,7 @@ jobs:
           context: ./application-service
           dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/application-service:v2
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/application-service:v3
 
   build-and-push-offer-service:
     name: Build Offer Service Docker Image
@@ -204,7 +204,7 @@ jobs:
           context: ./offer-service
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/offer-service:v4
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/offer-service:v5
 
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -218,7 +218,7 @@ jobs:
           context: ./offer-service
           dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/offer-service:v4
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/offer-service:v5
 
   build-and-push-test-service:
     name: Build Test Service Docker Image
@@ -247,7 +247,7 @@ jobs:
           context: ./test-service
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/test-service:v3
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/test-service:v4
 
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -261,7 +261,7 @@ jobs:
           context: ./test-service
           dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/test-service:v3
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/test-service:v4
 
   build-and-push-company-service:
     name: Build Company Service Docker Image
@@ -290,7 +290,7 @@ jobs:
           context: ./company-service
           dockerfile: Dockerfile
           push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/company-service:v1
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/company-service:v2
 
       - name: Login to Dockerhub
         uses: docker/login-action@v1
@@ -304,4 +304,4 @@ jobs:
           context: ./company-service
           dockerfile: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/company-service:v1
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/company-service:v2

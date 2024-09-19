@@ -1,7 +1,9 @@
 package com.elabidisoufiane.sosouca.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.elabidisoufiane.sosouca.dao.CEORepository;
@@ -39,6 +41,20 @@ public class CompanyService {
 
         return companyRepository.findByCeoId(id).stream()
                 .map(mapper::fromCompany)
+                .collect(Collectors.toList());
+    }
+
+    public List<CompanyResponseDto> findByIds(List<Integer> offerIds) {
+        // Remove duplicates by converting the list to a set
+        Set<Integer> uniqueIds = new HashSet<>(offerIds);
+
+        // Stream over the unique IDs and map each to a CandidateResponse
+        return uniqueIds.stream()
+                .map(id -> {
+                    Company company = companyRepository.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Company with ID " + id + " not found"));
+                    return mapper.fromCompany(company);
+                })
                 .collect(Collectors.toList());
     }
 
