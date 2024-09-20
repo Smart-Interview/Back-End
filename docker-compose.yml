@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   discovery-server:
-    image: ilyaselmabrouki/discovery-server:latest
+    image: ilyaselmabrouki/discovery-server:v6
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:v5
+    image: ilyaselmabrouki/config-server:v6
     container_name: config-server
     ports:
       - "9999:9999"
@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   company-service:
-    image: ilyaselmabrouki/company-service:v2
+    image: ilyaselmabrouki/company-service:v6
     container_name: company-service
     ports:
       - "8020:8020"
@@ -78,7 +78,7 @@ services:
         condition: service_healthy
 
   offer-service:
-    image: ilyaselmabrouki/offer-service:v5
+    image: ilyaselmabrouki/offer-service:v6
     container_name: offer-service
     ports:
       - "8040:8040"
@@ -106,11 +106,11 @@ services:
     ports:
       - '5432:5432'
     depends_on:
-      offer-service:
+      config-server:
         condition: service_healthy
 
   candidate-service:
-    image: ilyaselmabrouki/candidate-service:v3
+    image: ilyaselmabrouki/candidate-service:v6
     container_name: candidate-service
     ports:
       - "8070:8070"
@@ -168,7 +168,7 @@ services:
       - matching-service
 
   application-service:
-    image: ilyaselmabrouki/application-service:v3
+    image: ilyaselmabrouki/application-service:v6
     container_name: application-service
     ports:
       - "8050:8050"
@@ -210,7 +210,7 @@ services:
       - question-service
 
   test-service:
-    image: ilyaselmabrouki/test-service:v4
+    image: ilyaselmabrouki/test-service:v6
     container_name: test-service
     ports:
       - "8060:8060"
@@ -230,31 +230,6 @@ services:
       start_period: 40s
     depends_on:
       - testdb
-
-#  keycloak:
-#    container_name: keycloak-ms
-#    image: quay.io/keycloak/keycloak:24.0.2
-#    ports:
-#      - "9090:8080"
-#    environment:
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#    command:
-#      - "start-dev"
-#    depends_on:
-#      test-service:
-#        condition: service_healthy
-#
-#  gateway:
-#    build: ./gateway
-#    container_name: gateway
-#    ports:
-#      - "8222:8222"
-#    environment:
-#      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
-#      - CONFIG_SERVICE_URL=http://config-server:9999
-#    depends_on:
-#      - keycloak
 
 volumes:
   db-data:
