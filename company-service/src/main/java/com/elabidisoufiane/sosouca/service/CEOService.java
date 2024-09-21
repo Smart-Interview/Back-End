@@ -21,9 +21,10 @@ public class CEOService {
     public final CEOMapper mapper;
     public final CEORepository repository;
 
-    public Integer createCEO(CEORequest request) {
+    public CEOResponse createCEO(CEORequest request) {
         CEO candidate = mapper.toCEO(request);
-        return repository.save(candidate).getId();
+        CEO saved = repository.save(candidate);
+        return mapper.fromCEO(saved);
     }
 
     public void updateCEO(CEORequest request) {

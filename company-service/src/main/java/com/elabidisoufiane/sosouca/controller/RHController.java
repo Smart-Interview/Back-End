@@ -21,8 +21,13 @@ public class RHController {
 	private final RHService service;
 
 	@PostMapping
-	public ResponseEntity<Integer> save(@Valid @RequestBody RHRequest request) {
+	public ResponseEntity<RHResponse> save(@Valid @RequestBody RHRequest request) {
 		return ResponseEntity.ok(service.save(request));
+	}
+
+	@GetMapping
+	public ResponseEntity<RHResponse> getRHs(@RequestParam String email) {
+		return ResponseEntity.ok(service.getRHByEmail(email));
 	}
 
 	@GetMapping("/company/{id}")

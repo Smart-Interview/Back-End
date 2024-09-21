@@ -16,7 +16,7 @@ public class RHMapper {
         return RH.builder()
                 .id(request.getId())
                 .userName(request.getUserName())
-                .email(request.getUserName())
+                .email(request.getEmail())
                 .code(request.getCode())
                 .build();
     }

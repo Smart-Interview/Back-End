@@ -16,9 +16,10 @@ public class CandidateService {
 
     public final CandidateMapper mapper;
     public final CandidateRepository repository;
-    public Integer createCandidate(CandidateRequest request) {
+    public CandidateResponse createCandidate(CandidateRequest request) {
         Candidate candidate = mapper.toCandidate(request);
-        return repository.save(candidate).getId();
+        Candidate saved = repository.save(candidate);
+        return mapper.fromCandidate(saved);
     }
 
     public void updateCandidate(CandidateRequest request) {

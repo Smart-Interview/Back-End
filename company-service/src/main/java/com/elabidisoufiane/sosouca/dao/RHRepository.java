@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface RHRepository extends JpaRepository<RH, Integer> {
     List<RH> findByCompanyId(Integer id);
+    RH findByEmail(String email);
 }

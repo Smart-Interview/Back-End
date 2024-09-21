@@ -16,7 +16,7 @@ public class CandidateController {
     private final CandidateService service;
 
     @PostMapping
-    public ResponseEntity<Integer> createCandidate(
+    public ResponseEntity<CandidateResponse> createCandidate(
             @RequestBody @Valid CandidateRequest candidate
     ){
         return ResponseEntity.ok(service.createCandidate(candidate));

@@ -24,13 +24,14 @@ public class RHService {
 	private final RHMapper mapper;
 	//private final JavaMailSender emailSender;
 
-    public Integer save(RHRequest dto) {
+    public RHResponse save(RHRequest dto) {
 		RH rh = mapper.toRH(dto);
 		Company company = companyRepository
 				.findById(dto.getCompany()).orElseThrow(()-> new CompanyNotFoundException("No Company with this ID"));
 		rh.setCompany(company);
 		//sendEmail(dto.getEmail(), dto.getCode());
-		return rhRepository.save(rh).getId();
+		RH savedRH = rhRepository.save(rh);
+		return mapper.fromRH(savedRH);
 	}
 
 //	private void sendEmail(String to, String code) {
@@ -49,4 +50,9 @@ public class RHService {
 				.map(mapper::fromRH)
 				.collect(Collectors.toList());
 	}
+
+    public RHResponse getRHByEmail(String email) {
+		RH rh = rhRepository.findByEmail(email);
+		return mapper.fromRH(rh);
+    }
 }

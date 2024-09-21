@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   company-service:
-    image: ilyaselmabrouki/company-service:v6
+    image: ilyaselmabrouki/company-service:v7
     container_name: company-service
     ports:
       - "8020:8020"
@@ -110,7 +110,7 @@ services:
         condition: service_healthy
 
   candidate-service:
-    image: ilyaselmabrouki/candidate-service:v6
+    image: ilyaselmabrouki/candidate-service:v7
     container_name: candidate-service
     ports:
       - "8070:8070"

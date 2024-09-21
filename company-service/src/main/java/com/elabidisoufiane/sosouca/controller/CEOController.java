@@ -19,7 +19,7 @@ public class CEOController {
     private final CEOService service;
 
     @PostMapping
-    public ResponseEntity<Integer> createCEO(
+    public ResponseEntity<CEOResponse> createCEO(
             @RequestBody @Valid CEORequest candidate
     ){
         return ResponseEntity.ok(service.createCEO(candidate));
