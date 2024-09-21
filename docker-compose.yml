@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:v6
+    image: ilyaselmabrouki/config-server:v7
     container_name: config-server
     ports:
       - "9999:9999"
@@ -106,7 +106,7 @@ services:
     ports:
       - '5432:5432'
     depends_on:
-      config-server:
+      offer-service:
         condition: service_healthy
 
   candidate-service:
@@ -210,7 +210,7 @@ services:
       - question-service
 
   test-service:
-    image: ilyaselmabrouki/test-service:v6
+    image: ilyaselmabrouki/test-service:v7
     container_name: test-service
     ports:
       - "8060:8060"
@@ -230,6 +230,39 @@ services:
       start_period: 40s
     depends_on:
       - testdb
+
+  reportdb:
+    image: postgres:latest
+    container_name: report_db
+    environment:
+      - POSTGRES_PASSWORD=ilyas
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=reportDB
+    ports:
+      - '5436:5432'
+    depends_on:
+      test-service:
+        condition: service_healthy
+
+  report-service:
+    image: ilyaselmabrouki/report-service:v1
+    container_name: report-service
+    ports:
+      - "8030:8030"
+    environment:
+      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+      - CONFIG_SERVICE_URL=http://config-server:9999
+      - REPORT_DB_URL=jdbc:postgresql://report_db:5432/reportDB
+      - APPLICATION_SERVICE_URL=http://application-service:8050/api/v1/applications
+      - TEST_SERVICE_URL=http://test-service:8060/api/v1/tests
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8030/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      - reportdb
 
 volumes:
   db-data:

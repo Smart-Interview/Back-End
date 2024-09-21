@@ -1,4 +1,4 @@
-package com.ilyaselmabrouki.test_service.candidate;
+package com.ilyaselmabrouki.report_service.test;
 
 import lombok.Data;
 

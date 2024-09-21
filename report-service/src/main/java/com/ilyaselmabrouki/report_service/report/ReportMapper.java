@@ -15,6 +15,7 @@ public class ReportMapper {
     public ReportResponse fromReport(Report report){
         return new ReportResponse(
                 report.getId(),
+                null,
                 null
         );
     }

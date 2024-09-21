@@ -40,4 +40,9 @@ public class TestController {
     public ResponseEntity<Double> calculateResult(@PathVariable Integer id, @RequestBody @Valid List<ResultRequest> answers){
         return ResponseEntity.ok(service.calculateResult(id,answers));
     }
+
+    @GetMapping("/offer")
+    public ResponseEntity<List<TestResponse>> getAllTests(@RequestParam Integer offerId){
+        return ResponseEntity.ok(service.findCandidatesByOfferId(offerId));
+    }
 }

@@ -18,6 +18,7 @@ public class TestMapper {
         return new TestResponse(
                 test.getId(),
                 null,
+                null,
                 test.getScore(),
                 test.getCreatedAt()
         );

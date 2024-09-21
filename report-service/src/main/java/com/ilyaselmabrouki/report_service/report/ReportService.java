@@ -1,6 +1,7 @@
 package com.ilyaselmabrouki.report_service.report;
 
 import com.ilyaselmabrouki.report_service.application.ApplicationClient;
+import com.ilyaselmabrouki.report_service.test.TestClient;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,15 @@ public class ReportService {
     private final ReportRepository repository;
     private final ReportMapper mapper;
     private final ApplicationClient applicationClient;
+    private final TestClient testClient;
 
-    public Integer createReport(ReportRequest request) {
+    public ReportResponse createReport(ReportRequest request) {
         Report report = mapper.toReport(request);
-        return repository.save(report).getId();
+        Report saved = repository.save(report);
+        ReportResponse reportResponse = mapper.fromReport(saved);
+        reportResponse.setApplications(applicationClient.findApplicationsByOfferId(report.getOfferId()));
+        reportResponse.setTests(testClient.findTestsByOfferId(report.getOfferId()));
+        return reportResponse;
     }
 
     public List<ReportResponse> findAll() {
@@ -26,12 +32,5 @@ public class ReportService {
                 .stream()
                 .map(mapper::fromReport)
                 .collect(Collectors.toList());
-    }
-
-    public ReportResponse getReportById(Integer id) {
-        Report report = repository.findById(id).get();
-        ReportResponse reportResponse = mapper.fromReport(report);
-        reportResponse.setApplications(applicationClient.findApplicationsByOfferId(report.getOfferId()));
-        return reportResponse;
     }
 }

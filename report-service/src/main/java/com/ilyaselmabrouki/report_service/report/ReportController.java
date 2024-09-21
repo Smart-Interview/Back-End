@@ -16,7 +16,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping
-    public ResponseEntity<Integer> createReport(@RequestBody @Valid ReportRequest request){
+    public ResponseEntity<ReportResponse> createReport(@RequestBody @Valid ReportRequest request){
         return ResponseEntity.ok(reportService.createReport(request));
     }
 
@@ -25,8 +25,4 @@ public class ReportController {
         return ResponseEntity.ok(reportService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ReportResponse> getReportById(@PathVariable Integer id){
-        return ResponseEntity.ok(reportService.getReportById(id));
-    }
 }

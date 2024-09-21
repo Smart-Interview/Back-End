@@ -3,6 +3,7 @@ package com.ilyaselmabrouki.test_service.test;
 import com.ilyaselmabrouki.test_service.application.ApplicationClient;
 import com.ilyaselmabrouki.test_service.candidate.CandidateClient;
 import com.ilyaselmabrouki.test_service.candidate.CandidateResponse;
+import com.ilyaselmabrouki.test_service.exception.CandidateNotFoundException;
 import com.ilyaselmabrouki.test_service.exception.OfferNotFoundException;
 import com.ilyaselmabrouki.test_service.exception.TestNotFoundException;
 import com.ilyaselmabrouki.test_service.offer.OfferClient;
@@ -14,8 +15,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +68,7 @@ public class TestService {
         Map<Integer, OfferResponse> offerMap = offers.stream()
                 .collect(Collectors.toMap(OfferResponse::getId, offer -> offer));
 
-        // Map applications to responses
+        // Map tests to responses
         return tests.map(test -> {
             OfferResponse offerResponse = offerMap.get(test.getOfferId());
             if (offerResponse == null) {
@@ -99,4 +102,49 @@ public class TestService {
 
         return test.getScore();
     }
+
+    public List<TestResponse> findCandidatesByOfferId(Integer offerId) {
+        // Check if the offer exists
+        offerClient.findOfferById(offerId);
+
+        // Define sorting by score in descending order
+        Sort sortByScoreDesc = Sort.by(Sort.Direction.DESC, "score");
+
+        // Fetch tests for the given offerId, sorted by score
+        List<Test> tests = repository.findAllByOfferId(offerId, sortByScoreDesc);
+
+        // If no tests are found, return an empty list
+        if (tests.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Extract candidate IDs from the tests
+        List<Integer> candidateIds = tests.stream()
+                .map(Test::getCandidateId)
+                .collect(Collectors.toList());
+
+        // Fetch all candidate details in a single request
+        List<CandidateResponse> candidates = candidateClient.findCandidatesByIds(candidateIds);
+
+        // Map candidate ID to CandidateResponse for easy lookup
+        Map<Integer, CandidateResponse> candidateMap = candidates.stream()
+                .collect(Collectors.toMap(CandidateResponse::getId, candidate -> candidate));
+
+        // Create a list of TestResponses
+        List<TestResponse> testResponses = new ArrayList<>();
+
+        // Iterate over the sorted tests and map to TestResponse
+        for (Test test : tests) {
+            CandidateResponse candidateResponse = candidateMap.get(test.getCandidateId());
+            if (candidateResponse == null) {
+                throw new CandidateNotFoundException("Candidate with ID " + test.getCandidateId() + " not found");
+            }
+            TestResponse testResponse = mapper.fromTest(test);
+            testResponse.setCandidate(candidateResponse);
+            testResponses.add(testResponse);
+        }
+        return testResponses;
+    }
+
+
 }
