@@ -4,9 +4,12 @@ import com.elabidisoufiane.sosouca.dao.CompanyRepository;
 import com.elabidisoufiane.sosouca.dao.RHRepository;
 import com.elabidisoufiane.sosouca.dto.RHRequest;
 import com.elabidisoufiane.sosouca.dto.RHResponse;
+import com.elabidisoufiane.sosouca.email.EmailService;
 import com.elabidisoufiane.sosouca.exception.CompanyNotFoundException;
 import com.elabidisoufiane.sosouca.model.Company;
 import com.elabidisoufiane.sosouca.model.RH;
+import com.elabidisoufiane.sosouca.password.PasswordGenerator;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,25 +25,18 @@ public class RHService {
 	private final RHRepository rhRepository;
 	private final CompanyRepository companyRepository;
 	private final RHMapper mapper;
-	//private final JavaMailSender emailSender;
+	private final EmailService emailService;
 
-    public RHResponse save(RHRequest dto) {
+    public RHResponse save(RHRequest dto) throws MessagingException {
 		RH rh = mapper.toRH(dto);
 		Company company = companyRepository
 				.findById(dto.getCompany()).orElseThrow(()-> new CompanyNotFoundException("No Company with this ID"));
 		rh.setCompany(company);
-		//sendEmail(dto.getEmail(), dto.getCode());
+		rh.setCode(PasswordGenerator.generateRandomPassword());
+		emailService.sendAccountCreationEmail(rh.getEmail(), rh.getUserName(), rh.getCode(), rh.getCompany().getName(), rh.getCompany().getLocation());
 		RH savedRH = rhRepository.save(rh);
 		return mapper.fromRH(savedRH);
 	}
-
-//	private void sendEmail(String to, String code) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(to);
-//        message.setSubject("Your RH Code");
-//        message.setText("Hello, \n\nYour code is: " + code);
-//        emailSender.send(message);
-//    }
 
 	public List<RHResponse> getAllRHByCompany(Integer id) {
 		companyRepository.findById(id)

@@ -89,6 +89,33 @@ public  class JobOfferService {
 		});
 	}
 
+	public Page<JobOfferResponseDto> findAllOffers(int page, int size){
+		// Fetch applications
+		Pageable pageable = PageRequest.of(page, size);
+		Page<JobOffer> offers = repository.findAll(pageable);
+
+		// Fetch all offer responses in a single call (to avoid N+1 problem)
+		List<Integer> companyIds = offers.stream()
+				.map(JobOffer::getCompany)
+				.collect(Collectors.toList());
+
+		List<CompanyResponse> companies = companyClient.findByIds(companyIds);
+
+		Map<Integer, CompanyResponse> companyMap = companies.stream()
+				.collect(Collectors.toMap(CompanyResponse::getId, company -> company));
+
+		// Map applications to responses
+		return offers.map(offer -> {
+			CompanyResponse companyResponse = companyMap.get(offer.getCompany());
+			if (companyResponse == null) {
+				throw new CompanyNotFoundException("Company not found");
+			}
+			JobOfferResponseDto offerResponse = mapper.fromJobOffer(offer);
+			offerResponse.setCompany(companyResponse);
+			return offerResponse;
+		});
+	}
+
 	public void delete(Integer id) {
 		repository.deleteById(id);
 	}

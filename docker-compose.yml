@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:v7
+    image: ilyaselmabrouki/config-server:v8
     container_name: config-server
     ports:
       - "9999:9999"
@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   company-service:
-    image: ilyaselmabrouki/company-service:v7
+    image: ilyaselmabrouki/company-service:v8
     container_name: company-service
     ports:
       - "8020:8020"
@@ -78,7 +78,7 @@ services:
         condition: service_healthy
 
   offer-service:
-    image: ilyaselmabrouki/offer-service:v6
+    image: ilyaselmabrouki/offer-service:v7
     container_name: offer-service
     ports:
       - "8040:8040"
@@ -263,6 +263,16 @@ services:
       start_period: 40s
     depends_on:
       - reportdb
+
+  mail-dev:
+    container_name: mail-service
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    depends_on:
+      report-service:
+        condition: service_healthy
 
 volumes:
   db-data:

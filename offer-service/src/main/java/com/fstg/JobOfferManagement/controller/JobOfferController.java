@@ -33,6 +33,14 @@ public class JobOfferController {
 
 	private final JobOfferService service ;
 
+	@GetMapping("/all")
+	public ResponseEntity<Page<JobOfferResponseDto>> findJobOffers(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size
+	){
+		return ResponseEntity.ok(service.findAllOffers(page, size));
+	}
+
 	@GetMapping
 	public ResponseEntity<Page<JobOfferResponseDto>> getJobOffers(
 			@RequestParam Integer companyId,

@@ -4,6 +4,7 @@ import com.elabidisoufiane.sosouca.dto.CompanyResponseDto;
 import com.elabidisoufiane.sosouca.dto.RHRequest;
 import com.elabidisoufiane.sosouca.dto.RHResponse;
 import com.elabidisoufiane.sosouca.service.RHService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class RHController {
 	private final RHService service;
 
 	@PostMapping
-	public ResponseEntity<RHResponse> save(@Valid @RequestBody RHRequest request) {
+	public ResponseEntity<RHResponse> save(@Valid @RequestBody RHRequest request) throws MessagingException {
 		return ResponseEntity.ok(service.save(request));
 	}
 
