@@ -46,6 +46,15 @@ services:
       config-server:
         condition: service_healthy
 
+  mail-dev:
+    container_name: mail-service
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    depends_on:
+      - companydb
+
   company-service:
     image: ilyaselmabrouki/company-service:v8
     container_name: company-service
@@ -62,7 +71,7 @@ services:
       retries: 5
       start_period: 40s
     depends_on:
-      - companydb
+      - mail-dev
 
   offerdb:
     image: postgres:latest
@@ -264,15 +273,15 @@ services:
     depends_on:
       - reportdb
 
-  mail-dev:
-    container_name: mail-service
-    image: maildev/maildev
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
     ports:
-      - 1080:1080
-      - 1025:1025
-    depends_on:
-      report-service:
-        condition: service_healthy
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command: [ "start-dev" ]
 
 volumes:
   db-data:

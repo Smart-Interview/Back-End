@@ -30,6 +30,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(auth -> auth
+                    .pathMatchers("/api/v1/offers/all").permitAll()
                     //.pathMatchers("/api/v1/candidates/**").hasAuthority("CANDIDATE")
                     //.pathMatchers("/api/v1/offers/**").hasAuthority("RH")
                     .anyExchange().authenticated()
