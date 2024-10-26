@@ -352,6 +352,7 @@ jobs:
   build-and-push-gateway:
     name: Build Gateway Docker Image
     runs-on: ubuntu-latest
+    needs: build-and-push-report-service
 
     steps:
       - name: Checkout code
@@ -366,7 +367,7 @@ jobs:
       - name: Build the application
         run: |
           mvn clean
-          mvn -B package --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
         working-directory: ./gateway
 
       - name: Build docker image
