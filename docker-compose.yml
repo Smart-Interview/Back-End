@@ -281,6 +281,8 @@ services:
     environment:
       - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
       - CONFIG_SERVICE_URL=http://config-server:9999
+      - JWT_ISSUER_URI=http://keycloak:8090/realms/Smart-Inteview
+      - JWT_SET_URI=http://keycloak:8090/realms/Smart-Inteview/protocol/openid-connect/certs
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
       interval: 30s
