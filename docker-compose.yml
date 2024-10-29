@@ -15,7 +15,7 @@ services:
       start_period: 40s
 
   config-server:
-    image: ilyaselmabrouki/config-server:v9
+    image: ilyaselmabrouki/config-server:v11
     container_name: config-server
     ports:
       - "9999:9999"
@@ -273,24 +273,24 @@ services:
     depends_on:
       - reportdb
 
-  gateway:
-    image: ilyaselmabrouki/gateway:v9
-    container_name: gateway
-    ports:
-      - "8222:8222"
-    environment:
-      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
-      - CONFIG_SERVICE_URL=http://config-server:9999
-      - JWT_ISSUER_URI=http://keycloak:8090/realms/Smart-Inteview
-      - JWT_SET_URI=http://keycloak:8090/realms/Smart-Inteview/protocol/openid-connect/certs
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
-    depends_on:
-      - report-service
+#  gateway:
+#    image: ilyaselmabrouki/gateway:v9
+#    container_name: gateway
+#    ports:
+#      - "8222:8222"
+#    environment:
+#      - DISCOVERY_SERVICE_URL=http://discovery-server:8761/eureka/
+#      - CONFIG_SERVICE_URL=http://config-server:9999
+#      - JWT_ISSUER_URI=http://keycloak:8090/realms/Smart-Inteview
+#      - JWT_SET_URI=http://keycloak:8090/realms/Smart-Inteview/protocol/openid-connect/certs
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 40s
+#    depends_on:
+#      - report-service
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.2
